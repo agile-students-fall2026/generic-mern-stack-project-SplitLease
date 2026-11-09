@@ -80,18 +80,20 @@ function UserHomePage() {
         </div>
       </div>
 
-      <div className="actionButtons">
-        <button
-          className="createButton"
-          type="button"
-          onClick={() => navigate("/create")}
-        >
-          Create Household
-        </button>
-        <button className="createButton">Join Household</button>
-      </div>
-    </div>
-  );
+            <div className="actionButtons">
+                <button
+                    className="createButton"
+                    type="button"
+                    onClick={() => navigate('/create')}
+                >
+                    Create Household
+                </button>
+                <button className="createButton"
+                        type="button"
+                        onClick={() => navigate('/join-household')}>Join Household</button>
+            </div>
+        </div>
+    );
 }
 
 export default UserHomePage;
