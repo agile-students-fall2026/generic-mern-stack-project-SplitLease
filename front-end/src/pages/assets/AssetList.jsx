@@ -26,6 +26,12 @@ const AssetList = () => {
         asset.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const handleRemoveAsset = (assetId) => {
+        setAssets(currentAssets =>
+            currentAssets.filter(asset => asset.id !== assetId)
+        );
+    };  
+
     return (
         <div className="asset-page-container">
             <div className="asset-header">
@@ -76,6 +82,12 @@ const AssetList = () => {
                                                 className="asset-image"
                                             />
                                             <div className="asset-description">{asset.description}</div>
+                                            <button
+                                                type="button"
+                                                className="remove-asset-button"
+                                                onClick={() => handleRemoveAsset(asset.id)}>
+                                                Remove
+                                             </button>
                                         </div>
                                     </div>
                                 ))
