@@ -107,7 +107,7 @@ const ExpenseList = () => {
                 type="button"
                 onClick={() => setSelectedExpenseId(expense.id)}
               >
-                {expense.expense_name}
+                {expense.name}
               </button>
             </div>
           ))
