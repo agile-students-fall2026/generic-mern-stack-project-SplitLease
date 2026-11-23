@@ -4,12 +4,15 @@ require("dotenv").config();
 const express = require("express");
 const { getHouseholdActivity } = require("./services/activityService");
 const purchaseAssetRouter = require("./services/purchase_asset");
+const protocolsRouter = require(".services/protocols")
 
 const app = express();
 
 app.use(express.json());
-app.use(purchaseAssetRouter);
+app.use(express.urlencoded({ extended: true }));
 
+app.use(purchaseAssetRouter);
+app.use("/protocols", protocolsRouter);
 app.get("/api/households/:householdId/activity", async (req, res, next) => {
   const householdId = Number(req.params.householdId);
 
