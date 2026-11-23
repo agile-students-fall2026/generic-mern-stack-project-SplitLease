@@ -18,7 +18,7 @@ const ProtocolProposal = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
-      ..prevState,
+      ...prevState,
       [name]: value,
     }));
   };
@@ -35,7 +35,7 @@ const ProtocolProposal = () => {
       .post("http://localhost:3000/protocols", formData)
       .then((response) => {
         console.log("Proposal created:", response.data);
-        navaigate("/protocols")l
+        navigate("/protocols");
       })
       .catch((err) => {
         console.error("Error creating proposal:", err);
@@ -79,13 +79,14 @@ const ProtocolProposal = () => {
 
         <div className="proposalCard">
           <h2 className="proposalLabel">Proposal Description:</h2>
-          <textarea 
+          <input
           className="proposalInput proposalTextarea"
+          type="text"
           name="protocol_description"
           value={formData.protocol_description}
           placeholder="Describe the rules and expectations..."
           onChange={handleChange}
-          ></textarea>
+          ></input>
         </div>
 
         <div className="resourceActions">
