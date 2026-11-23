@@ -1,10 +1,48 @@
 import React, { useState } from "react";
 import "./protocol_proposal.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 
-const ProtocolProposal = (props) => {
+const API_URL = "http://localhost:3000";
+
+
+const ProtocolProposal = () => {
   const navigate = useNavigate();
+  
+  const [formData, setData] = useState({
+    protocol_name: "",
+    protocol_description: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({
+      ..prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!formData.protocol_name.trim() || !formData.protocol_description.trim()) {
+      alert("Please enter both a proposal name and description.");
+      return;
+    }
+
+    axios
+      .post("http://localhost:3000/protocols", formData)
+      .then((response) => {
+        console.log("Proposal created:", response.data);
+        navaigate("/protocols")l
+      })
+      .catch((err) => {
+        console.error("Error creating proposal:", err);
+        alert("Failed to submit proposal. Please try again.");
+      });
+  };
+
   return (
     <div className="protocolContainer">
       <header className="protocolHeader">
@@ -26,15 +64,28 @@ const ProtocolProposal = (props) => {
         <h1 className="protocolTitle">Propose a Protocol</h1>
       </header>
 
-      <div className="proposalForm">
+      <div className="proposalForm" onSubmit ={handleSubmit}>
         <div className="proposalCard">
           <h2 className="proposalLabel">Proposal Name:</h2>
-          <input type="text" className="proposalInput" />
+          <input 
+            type="text" 
+            className="proposalInput"
+            name="protocol_name"
+            value={formData.protocl_name}
+            placeholder="e.g. Quiet hours after 11pm"
+            onChange={handleChange}
+            />
         </div>
 
         <div className="proposalCard">
           <h2 className="proposalLabel">Proposal Description:</h2>
-          <textarea className="proposalInput proposalTextarea"></textarea>
+          <textarea 
+          className="proposalInput proposalTextarea"
+          name="protocol_description"
+          value={formData.protocol_description}
+          placeholder="Describe the rules and expectations..."
+          onChange={handleChange}
+          ></textarea>
         </div>
 
         <div className="resourceActions">

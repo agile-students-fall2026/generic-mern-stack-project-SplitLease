@@ -4,82 +4,72 @@ const router = express.Router();
 // mock protocols
 let protocols = [
     {
-        protocol_id: 1,
+        id: 1,
         protocol_name: "Quiet hours after 11pm",
         protocol_description: "Keep noise levels donw between 11pm and 7am Stunday through Thursday.",
         proposed_by: "John Doe",
-        household_id: 1,
-        protocol_status: "Agreed - Agreed - Agreed - [Declare Status]",
         approvals: 3,
         member_count: 4,
         status: "pending"
     },
     {
-        protocol_id: 2,
+        id: 2,
         protocol_name: "Dishes washed within 24 hours",
         protocol_description: "Shared sink must be clear, all dishes must be washed within 24 hours",
         proposed_by: "Alex Smith",
-        household_id: 1,
-        protocol_status: "Agreed - Agreed - Agreed - Agreed",
         approvals: 4,
         member_count: 4,
         status: "approved"
     }
 ];
 
-
+const calcStatus = (approvals, memberCount) => {
+      return approvals >= memberCount ? "approved" : "pending";
+};
 
 // GET /protocols , view all protocols
 router.get("/", (req, res) => {
     res.status(200).json(protocols);
 });
 
-// GET /protocols/:id , view single protocol
+// GET, view single protocol
 router.get("/:id", (req, res) => {
     const protocolID = parseInt(req.params.id, 10);
-    const protocol = protocols.find((p) => p.protocol_id === protocolID)
+    const protocol = protocols.find((p) => p.id === protocolID)
 
     if (!protocols){
-        return res.status(404).json({ error: "Protocol with ID ${protocolID} not found." });
+        return res.status(404).json({ error: "Protocol not found." });
     }
     
     res.status(200).json(protocol);
 });
 
-// POST /protocols, proposes a new protocol with validation
+// POST, proposes a new protocol with validation
 router.post("/", (req, res) => {
-    const { protocol_name, protocol_description, proposed_by, member_count } = req.body;
+    const { protocol_name, protocol_description, proposed_by } = req.body;
 
-    //checks to see if the input is valid
+    //input validation
 
-    if (!protocol_name || typeof protocol_name != "string"){
-        return res.status(400).json({ error: "Error: 'protocol_name' is required"});
+    if (!protocol_name || !protocol_name.trim()){
+        return res.status(400).json({ error: "Protocol name is required"});
     }
 
-    if (!protocol_description || typeof protocol_description != "string"){
-        return res.status(400).json({ error: "Error: 'protocol_description' is required"});
-    }
-
-    if (!proposed_by || typeof proposed_by != "string"){
-        return res.status(400).json({ error: "Error: 'proposed_by' is required"})
+    if (!protocol_description || !protocol_description.trim()){
+        return res.status(400).json({ error: "Protocol description is required"});
     }
 
     // sets id to max ID + 1 if there exists at least one protocol
-    const nextID = protocols.length > 0 ? Math.max(...protocols.map((p) => p.protocol_id)) + 1 : 1;
-    
-    // if member count is not valid, it is set to 4 by default
-    const totalMembers = parseInt(member_count, 10) || 4;
+    const nextID = protocols.length > 0 ? Math.max(...protocols.map((p) => p.id)) + 1 : 1;
+    const memberCount = 4;
 
     const newProtocol = {
-        protocol_id: nextID,
+        id: nextID,
         protocol_name: "protocol_name.trim()",
         protocol_description: "protocol_description.trim()",
-        proposed_by: proposed_by,
-        household_id: 1,
-        protocol_status: "Agreed - [Declare Status]",
+        proposed_by: proposed_by || "Current user",
         approvals: 1,    //automatically approved by proposer
-        member_count: totalMembers,
-        status: calculateStatus(1, totalMembers)
+        member_count: memberCount,
+        status: calcStatus(1, memberCount);
     };
 
     protocols.push(newProtocol);
@@ -89,10 +79,10 @@ router.post("/", (req, res) => {
 // POST, approves a new protocol
 router.post("/:id/approve", (req, res) => {
     const protocolID = parseInt(req.params.id, 10);
-    const protocol = protocols.find((p) => p.protocol_id === protocolID)
+    const protocol = protocols.find((p) => p.id === protocolID)
 
     if(!protocol){
-        return res.status(404).json({ error: "Protocol with ID ${protocolID} not found." })
+        return res.status(404).json({ error: "Protocol not found." })
     }
 
     if (protocol.status === "approved" || protocol.approvals >+ protocol.member_count){
@@ -100,9 +90,9 @@ router.post("/:id/approve", (req, res) => {
     }
 
     protocol.approvals += 1;
-    protocol.status = protocol.approvals >= protocol.member_count ? "approved" : "pending";
+    protocol.status = getStatus(protocol.approvals, protocol.member_count);
 
     res.status(200).json(protocol);
 });
 
-module.exports = router;
+module.exports = router();
