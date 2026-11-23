@@ -6,7 +6,7 @@ let protocols = [
     {
         id: 1,
         protocol_name: "Quiet hours after 11pm",
-        protocol_description: "Keep noise levels donw between 11pm and 7am Stunday through Thursday.",
+        protocol_description: "Keep noise levels down between 11pm and 7am Stunday through Thursday.",
         proposed_by: "John Doe",
         approvals: 3,
         member_count: 4,
@@ -69,7 +69,7 @@ router.post("/", (req, res) => {
         proposed_by: proposed_by || "Current user",
         approvals: 1,    //automatically approved by proposer
         member_count: memberCount,
-        status: calcStatus(1, memberCount);
+        status: calcStatus(1, memberCount)
     };
 
     protocols.push(newProtocol);
@@ -95,4 +95,4 @@ router.post("/:id/approve", (req, res) => {
     res.status(200).json(protocol);
 });
 
-module.exports = router();
+module.exports = router;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import "./Protocols.css";
 import axios from "axios";
@@ -26,7 +26,7 @@ const Protocols = () => {
 
   const handleApprove = (id) => {
     axios
-      .post('http://localhost:3000/protocols/${id}/approve')
+      .post(`http://localhost:3000/protocols/${id}/approve`)
       .then((response) => {
         console.log("Approved protocol:", response.data);
         setApprovedByMe([...approvedByMe, id]);

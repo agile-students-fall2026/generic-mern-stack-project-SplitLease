@@ -4,7 +4,7 @@ require("dotenv").config();
 const express = require("express");
 const { getHouseholdActivity } = require("./services/activityService");
 const purchaseAssetRouter = require("./services/purchase_asset");
-const protocolsRouter = require(".services/protocols")
+const protocolsRouter = require("./services/protocols")
 
 const app = express();
 
