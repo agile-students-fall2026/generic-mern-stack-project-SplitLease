@@ -14,7 +14,7 @@ function UserHomePage() {
     const fetchHouseholds = async () => {
       try {
         const response = await axios.get(
-          import.meta.env.VITE_HOUSEHOLDS_API_URL,
+          "/api/households",
         );
         const uniqueHouseholds = response.data.filter(
           (household, index, self) =>

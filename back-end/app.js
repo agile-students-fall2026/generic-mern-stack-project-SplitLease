@@ -17,6 +17,25 @@ const app = express();
 app.use(express.json());
 app.use(purchaseAssetRouter);
 
+app.get("/api/households", (req, res) => {
+  res.json(households)
+})
+app.get("/api/expenses", (req, res) => {
+  res.json(expenses)
+})
+app.post("/api/expenses", (req, res) => {
+  const { name, description, price } = req.body || {}
+  if (!name || !description || !price) {
+    return res.status(400).json({ error: "name, description, and price are required" })
+  }
+  res.status(201).json({
+    id: expenses.length + 1,
+    name: String(name).trim(),
+    description: String(description).trim(),
+    price: Number(price),
+  })
+})
+
 app.get("/api/households/:householdId/activity", async (req, res, next) => {
   const householdId = Number(req.params.householdId);
 

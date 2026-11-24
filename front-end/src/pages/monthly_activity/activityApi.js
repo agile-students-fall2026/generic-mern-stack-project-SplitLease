@@ -6,7 +6,7 @@ import { getCurrentUser } from '../login/authApi'
 // Profile pictures come from Picsum, a random image service.
 export const getMonthlyActivity = async () => {
   const [membersRes, activityRes] = await Promise.all([
-    axios.get(import.meta.env.VITE_MEMBERS_API_URL),
+    axios.get("/api/members"),
     axios.get(import.meta.env.VITE_ACTIVITY_API_URL),
   ])
 

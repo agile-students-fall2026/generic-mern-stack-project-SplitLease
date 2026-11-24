@@ -14,7 +14,7 @@ const Profile = () => {
     });
 
     useEffect(() => {
-        axios.get(import.meta.env.VITE_MEMBERS_API_URL)
+        axios.get("/api/members")
             .then(({ data }) => {
                 const first = data[0];
 

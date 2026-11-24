@@ -20,7 +20,7 @@ const IndividualProtocol = (props) => {
   }, []);
 
   useEffect(() => {
-    axios.get(import.meta.env.VITE_MEMBERS_API_URL).then((response) => {
+    axios.get("/api/members").then((response) => {
       setMembers(response.data);
     });
   }, []);

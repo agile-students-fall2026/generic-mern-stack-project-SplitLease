@@ -18,8 +18,8 @@ const JoinHousehold = () => {
         const fetchData = async () => {
             try {
                 const [householdsRes, membersRes] = await Promise.all([
-                axios.get(import.meta.env.VITE_HOUSEHOLDS_API_URL),
-                axios.get(import.meta.env.VITE_MEMBERS_API_URL),
+                axios.get("/api/households"),
+                axios.get("/api/members"),
                 ])
                 if (Array.isArray(householdsRes.data)) setHouseholds(householdsRes.data)
                 if (Array.isArray(membersRes.data)) setMembers(membersRes.data)

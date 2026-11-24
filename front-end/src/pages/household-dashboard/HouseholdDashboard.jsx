@@ -11,7 +11,7 @@ const HouseholdDashboard = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_MEMBERS_API_URL);
+        const response = await axios.get("/api/members");
         setMembers(response.data);
       } catch (error) {
         console.error("Error fetching members:", error);

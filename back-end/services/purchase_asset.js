@@ -67,14 +67,25 @@ const uploadImage = (req, res, next) => {
 
 let members = null;
 
+// const loadMembers = async () => {
+//   const response = await axios.get(
+//     `${process.env.API_MEMBERS_URL}?key=${process.env.API_SECRET_KEY}`,
+//   );
+//   members = response.data.map((m) => ({
+//     id: m.id,
+//     first_name: m.first_name,
+//     last_name: m.last_name,
+//     household_id: m.household_id,
+//   }));
+//   return members;
+// };
+const localMembers = require("../mock-data/members.json");
 const loadMembers = async () => {
-  const response = await axios.get(
-    `${process.env.API_MEMBERS_URL}?key=${process.env.API_SECRET_KEY}`,
-  );
-  members = response.data.map((m) => ({
+  members = localMembers.map((m) => ({
     id: m.id,
     first_name: m.first_name,
     last_name: m.last_name,
+    email: m.email,
     household_id: m.household_id,
   }));
   return members;

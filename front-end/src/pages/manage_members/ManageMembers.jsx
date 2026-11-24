@@ -46,7 +46,7 @@ const ManageMembersPage = () => {
     useEffect(() => {
         const fetchMembers = async () => {
             try{
-                const response = await axios.get(import.meta.env.VITE_MEMBERS_API_URL)
+                const response = await axios.get("/api/members")
                 if (Array.isArray(response.data)) {
                     setMembers(response.data)
                 }else {

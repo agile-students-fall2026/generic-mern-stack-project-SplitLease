@@ -1,9 +1,13 @@
-const axios = require("axios")
+// const axios = require("axios")
 
-const loadMockarooMembers = async () => {
-    const response = await axios.get(process.env.MOCKAROO_MEMBERS_API_URL)
-    return response.data
-}
+const localMembers = require("../mock-data/members.json")
+
+const loadLocalMembers = async () => localMembers
+
+// const loadMockarooMembers = async () => {
+//     const response = await axios.get(process.env.MOCKAROO_MEMBERS_API_URL)
+//     return response.data
+// }
 
 // The mock API has no balance data yet, so every roommate starts settled.
 // Once balances are stored, this can return { memberId: amountOwed } for the household.
@@ -19,7 +23,7 @@ const toId = (value) => {
 // Nothing is saved until the database is added.
 const removeRoommate = async (
     { householdId, memberId, requesterId } = {},
-    loadMembers = loadMockarooMembers,
+    loadMembers = loadLocalMembers,
     loadBalances = loadNoBalances,
 ) => {
     const houseId = toId(householdId)

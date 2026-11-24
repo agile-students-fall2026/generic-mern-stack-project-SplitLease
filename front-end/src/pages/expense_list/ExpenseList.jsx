@@ -22,7 +22,7 @@ const ExpenseList = () => {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_EXPENSES_API_URL);
+        const response = await axios.get("/api/expenses");
         setExpenses(response.data);
       } catch (error) {
         console.error("Error fetching expenses:", error);
@@ -54,7 +54,7 @@ const ExpenseList = () => {
     }
 
     try {
-      const response = await axios.post(import.meta.env.VITE_EXPENSES_API_URL, {
+      const response = await axios.post("/api/expenses", {
         name: trimmedName,
         description: trimmedDescription,
         price: trimmedPrice,
