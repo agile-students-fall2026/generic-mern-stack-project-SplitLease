@@ -43,7 +43,7 @@ const JoinHousehold = () => {
                 setFoundHousehold(null)
             }
     }
-    const memberCount = foundHousehold? members.filter(member => member.household_id === foundHousehold.household_id).length
+    const memberCount = foundHousehold? members.filter(member => member.household_id === foundHousehold.id).length
                     : 0
     return(
         <div className="joinHouseholdPage">

@@ -86,6 +86,7 @@ const loadMembers = async () => {
     first_name: m.first_name,
     last_name: m.last_name,
     email: m.email,
+    routing_num: m.routing_num,
     household_id: m.household_id,
   }));
   return members;

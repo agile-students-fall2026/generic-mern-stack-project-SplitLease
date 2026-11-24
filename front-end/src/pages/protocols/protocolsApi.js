@@ -27,7 +27,7 @@ export const getHouseholdProtocols = async () => {
     ? households.find((h) => h.id === householdId)
     : null;
   const householdName =
-    (householdRecord && householdRecord.name) || `Household ${householdId}`;
+    (householdRecord && householdRecord.household_name) || `Household ${householdId}`;
 
   const nameOf = (id) => {
     const member = allMembers.find((m) => m.id === id);
