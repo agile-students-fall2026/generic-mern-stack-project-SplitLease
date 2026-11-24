@@ -2,6 +2,10 @@ const path = require("path")
 require("dotenv").config()
 
 const express = require("express")
+const members = require("./mock-data/members.json")
+const households = require("./mock-data/households.json")
+const expenses = require("./mock-data/expenses.json")
+
 const { getHouseholdActivity } = require("./services/activityService")
 
 const app = express()
