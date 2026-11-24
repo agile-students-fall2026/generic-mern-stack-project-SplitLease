@@ -11,7 +11,7 @@ const AssetList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios(import.meta.env.VITE_EXPENSES_API_URL)
+    axios("http://localhost:3000/api/assets")
       .then((response) => {
         console.log("API Response:", response.data);
         setAssets(response.data);
