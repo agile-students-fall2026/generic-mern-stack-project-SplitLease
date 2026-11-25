@@ -1,10 +1,10 @@
-const localMembers = require("../mock-data/members.json")
-const localActivity = require("../mock-data/activity.json")
+const localMembers = require("../mock-data/members.json");
+const localActivity = require("../mock-data/activity.json");
 
 const loadLocalData = async () => ({
-    members: localMembers,
-    activity: localActivity,
-})
+  members: localMembers,
+  activity: localActivity,
+});
 
 // const loadMockarooData = async () => {
 //     const [membersResponse, activityResponse] = await Promise.all([
@@ -19,42 +19,42 @@ const loadLocalData = async () => ({
 // }
 
 const getHouseholdActivity = async (
-    householdId,
-    now = new Date(),
-    loadData = loadLocalData,
+  householdId,
+  now = new Date(),
+  loadData = loadLocalData,
 ) => {
-    const {members: allMembers, activity: allActivity} = await loadData()
+  const { members: allMembers, activity: allActivity } = await loadData();
 
-    const members = allMembers.filter(
-        (member) => member.household_id === householdId,
-    )
+  const members = allMembers.filter((member) =>
+    member.household_ids.includes(householdId),
+  );
 
-    const memberIds = members.map((member) => member.id)
+  const memberIds = members.map((member) => member.id);
 
-    const activity = allActivity.filter(
-        (entry) => entry.household_id === householdId && memberIds.includes(entry.paid_by),
-    )
+  const activity = allActivity.filter(
+    (entry) =>
+      entry.household_id === householdId && memberIds.includes(entry.paid_by),
+  );
 
-    const currentYear = now.getFullYear()
-    const currentMonth = now.getMonth()
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth();
 
-    const currentMonthBills = activity.filter((entry) => {
-        const [year, month] = entry.date.split("-").map(Number)
+  const currentMonthBills = activity.filter((entry) => {
+    const [year, month] = entry.date.split("-").map(Number);
 
-        return (
-            entry.type === "bill" &&
-            year === currentYear &&
-            month - 1 === currentMonth
-        )
-    })
+    return (
+      entry.type === "bill" &&
+      year === currentYear &&
+      month - 1 === currentMonth
+    );
+  });
 
-    return {
-        members,
-        activity,
-        currentMonthBills,
-    }
-}
+  return {
+    members,
+    activity,
+  };
+};
 
 module.exports = {
-    getHouseholdActivity,
-}
+  getHouseholdActivity,
+};
