@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png"
 import { getCurrentUser } from "../login/authApi"
 import {
-  createRecurringBill,
+  createHouseholdExpense,
   getHouseholdExpenses,
   settleExpense,
 } from "./expenseApi"
@@ -13,7 +13,6 @@ const EMPTY_FORM = {
   name: "",
   description: "",
   amount: "",
-  frequency: "monthly",
 }
 import Header from '../../components/Header';
 
@@ -87,7 +86,11 @@ const ExpenseList = () => {
     setPageError("")
 
     try {
-      const result = await createRecurringBill(householdId, formData)
+      const result = await createHouseholdExpense(
+        householdId,
+        formData,
+        currentUser.id,
+      )
 
       if (result.errors) {
         setFormErrors(result.errors)
@@ -99,11 +102,11 @@ const ExpenseList = () => {
         return
       }
 
-      setExpenses((currentExpenses) => [...currentExpenses, result.bill])
-      setSelectedExpenseId(result.bill.id)
+      setExpenses((currentExpenses) => [...currentExpenses, result.expense])
+      setSelectedExpenseId(result.expense.id)
       setFormData(EMPTY_FORM)
     } catch {
-      setPageError("Could not create the recurring bill. Please try again.")
+      setPageError("Could not create the one-time expense. Please try again.")
     } finally {
       setCreating(false)
     }
@@ -306,7 +309,7 @@ const ExpenseList = () => {
             )}
           </div>
 
-          <div>
+          {/*<div>
             <label htmlFor="expenseFrequency">Frequency</label>
             <select
               id="expenseFrequency"
@@ -319,7 +322,7 @@ const ExpenseList = () => {
             {formErrors.frequency && (
               <p className="field-error">{formErrors.frequency}</p>
             )}
-          </div>
+          </div>*/}
 
           <button type="submit" disabled={creating}>
             {creating ? "Submitting..." : "Submit Expense"}
@@ -328,6 +331,13 @@ const ExpenseList = () => {
       </div>
 
       <div className="actionButtons">
+        <button
+          className="monthlyActivityButton"
+          type="button"
+          onClick={() => navigate("/rent-split")}
+        >
+          Split Rent
+        </button>
         <button
           className="monthlyActivityButton"
           type="button"
