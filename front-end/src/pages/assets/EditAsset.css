@@ -1,0 +1,11 @@
+.form-group input[type="file"] {
+  margin-top: 8px;
+  border: none;
+  padding: 0;
+}
+
+.edit-status {
+  color: #576490;
+  font-weight: bold;
+  text-align: center;
+}
