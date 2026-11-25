@@ -1,27 +1,9 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-// const sinon = require("sinon");
-// const axios = require("axios");
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-// process.env.API_MEMBERS_URL = "http://fake-api.test/members";
-// process.env.API_ASSETS_URL = "http://fake-api.test/assets";
-// process.env.API_SECRET_KEY = "test-key";
-
-// const fakeMembers = [
-//   { id: 1, first_name: "Alice", last_name: "Smith", household_id: 1 },
-//   { id: 2, first_name: "Bob", last_name: "Jones", household_id: 1 },
-// ];
-
-// const axiosStub = sinon.stub(axios, "get").callsFake(async (url) => {
-//   if (url.startsWith(process.env.API_MEMBERS_URL)) return { data: fakeMembers };
-//   return { data: [] };
-// });
-
-// delete require.cache[require.resolve("../app")];
-// delete require.cache[require.resolve("../services/purchase_asset")];
 const app = require("../app");
 
 const validAsset = () => ({
