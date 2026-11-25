@@ -48,24 +48,17 @@ const HouseholdDashboard = () => {
       <Header page_title="Household Dashboard" backTo="/home" />
 
       <div className="sectionContainer">
-        <div className="membersListContainer">
-          <div className="sectionTitle">
-            <p className="fieldText">Members</p>
-            <button
-              className="primaryButton"
-              onClick={() => navigate("/manage-members")}
-            >
-              Manage Members
-            </button>
-          </div>
+          <h2 className="sectionTitle">
+            Members
+          </h2>
           <input
             type="text"
-            className="textInput"
+            className="textField"
             placeholder="search members"
           />
-          <div className="membersList">
+          <div className="dashboardMembers">
             {members.length === 0 ? (
-              <p className="fieldText">No members available.</p>
+              <p className="dashboardEmpty">No members available.</p>
             ) : (
               members.map((member, index) => (
                 <button
@@ -78,21 +71,30 @@ const HouseholdDashboard = () => {
                 </button>
               ))
             )}
+            <button
+              className="primaryButton dashboardButton"
+              onClick={() => navigate("/manage-members")}
+            >
+              Manage Members
+            </button>
           </div>
+                  {members.length > 4 && (
+          <p className="scrollMessage">Scroll down to see more</p>
+        )}
         </div>
 
-        <div className="assetsContainer">
-          <p className="fieldText">Assets</p>
+        <div className="sectionContainer">
+          <h1 className="sectionTitle">Assets</h1>
           <div className="assetsList">
             <button
-              className="viewAssetsButton"
+              className="primaryButton"
               onClick={() => navigate("/assets")}
             >
               View Assets Page
             </button>
             <p className="assetQuickInfo"># of Assets: 5</p>
             <button
-              className="fieldText"
+              className="primaryButton"
               onClick={() => navigate("/assets/create")}
             >
               Quick Create Asset
@@ -100,16 +102,16 @@ const HouseholdDashboard = () => {
           </div>
         </div>
 
-        <div className="assetsContainer">
-          <p className="fieldText">Expenses</p>
+        <div className="sectionContainer">
+          <h1 className="sectionTitle">Expenses</h1>
           <div className="assetsList">
             <button
-              className="viewAssetsButton"
+              className="primaryButton"
               onClick={() => navigate("/expenses")}>
               View Expenses Page
             </button>
             <button
-              className="viewAssetsButton"
+              className="primaryButton"
               onClick={() => navigate("/settle")} >
               Settle Payment
             </button>
@@ -123,8 +125,8 @@ const HouseholdDashboard = () => {
           </div>
         </div>
 
-        <div className="assetsContainer">
-          <p className="fieldText">Protocols</p>
+        <div className="sectionContainer">
+          <h1 className="sectionTitle">Protocols</h1>
           <div className="assetsList">
             <button
               className="viewAssetsButton"
@@ -135,7 +137,7 @@ const HouseholdDashboard = () => {
             <p className="fieldText">Preview Protocols</p>
           </div>
         </div>
-      </div>
+
     </div>
   );
 };
