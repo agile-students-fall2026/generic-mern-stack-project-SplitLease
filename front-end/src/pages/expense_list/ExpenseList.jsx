@@ -142,51 +142,35 @@ const ExpenseList = () => {
 
   return (
     <div className="mainContainer">
-      {/* <header className="header">
-        <button
-          type="button"
-          className="logoButton"
-          onClick={() => navigate("/home")}
-        >
-          <img
-            src={SplitLeaseLogo}
-            alt="SplitLease Logo"
-            className="headerLogo"
-          />
-        </button>
-
-        <button className="backButton" onClick={() => navigate("/household")}>
-          Back
-        </button>
-      </header> */}
-
-      {/* <h1>Household Expenses</h1> */}
-        <Header page_title= "Household Expenses" backTo="/household"/>
+      <Header page_title= "Household Expenses" backTo="/household"/>
       {pageError && <p className="expense-error">{pageError}</p>}
 
-      <div className="expense-list">
-        <h1>Expenses</h1>
+      <div className="sectionContainer">
+        <h2 className="sectionTitle">Expenses</h2>
 
         {loading ? (
           <p>Loading expenses...</p>
         ) : expenses.length === 0 ? (
           <p>There are currently no expenses available.</p>
         ) : (
-          expenses.map((expense) => (
+          <div className="expenseRows">
+          {expenses.map((expense) => (
             <div key={expense.id} className="expense-item">
               <button
                 type="button"
+                className="listRow"
                 onClick={() => setSelectedExpenseId(expense.id)}
               >
                 {expense.name}
               </button>
             </div>
-          ))
+          ))}
+          </div>
         )}
       </div>
 
-      <div className="expenses-to-be-settled">
-        <h1>Expenses to Be Settled</h1>
+      <div className="sectionContainer">
+        <h2 className="sectionTitle">Expenses to Be Settled</h2>
 
         {settlementError && (
           <p className="expense-error">{settlementError}</p>
@@ -197,10 +181,12 @@ const ExpenseList = () => {
         ) : unpaidExpenses.length === 0 ? (
           <p>You have no expenses to settle.</p>
         ) : (
-          unpaidExpenses.map((expense) => (
-            <div key={expense.id} className="expense-item expense-to-settle">
+          <div className="expenseRows">
+          {unpaidExpenses.map((expense) => (
+            <div key={expense.id} className="listRow expenseSettleRow">
               <button
                 type="button"
+                className="expenseRowName"
                 onClick={() => setSelectedExpenseId(expense.id)}
               >
                 {expense.name}
@@ -208,19 +194,20 @@ const ExpenseList = () => {
 
               <button
                 type="button"
-                className="settleExpenseButton"
+                className="primaryButton expenseSettleButton"
                 disabled={settlingExpenseId === expense.id}
                 onClick={() => handleSettle(expense.id)}
               >
                 {settlingExpenseId === expense.id ? "Settling..." : "Settle"}
               </button>
             </div>
-          ))
+          ))}
+          </div>
         )}
       </div>
 
-      <div className="expense-details">
-        <h1>Expense Details</h1>
+      <div className="sectionContainer expenseDetails">
+        <h2 className="sectionTitle"></h2>
 
         {selectedExpense ? (
           <div>
@@ -247,7 +234,7 @@ const ExpenseList = () => {
               </p>
             )}
 
-            <h2>Members Who Have Paid</h2>
+            <h2 className="expenseSubheading">Members Who Have Paid</h2>
 
             {selectedExpense.paidByMemberIds.length === 0 ? (
               <p>No members have settled this expense yet.</p>
@@ -264,13 +251,14 @@ const ExpenseList = () => {
         )}
       </div>
 
-      <div className="log-new-expense">
-        <h1>Log New Expense</h1>
+      <div className="sectionContainer">
+        <h2 className="sectionTitle"></h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="expenseForm">
           <div>
-            <label htmlFor="expenseName">Expense Name</label>
+            <label htmlFor="expenseName" className="expenseLabel" >Expense Name</label>
             <input
+              className="textField"
               id="expenseName"
               type="text"
               name="name"
@@ -284,8 +272,9 @@ const ExpenseList = () => {
           </div>
 
           <div>
-            <label htmlFor="expenseDescription">Description</label>
+            <label htmlFor="expenseDescription" className="expenseLabel">Description</label>
             <textarea
+              className="textField"
               id="expenseDescription"
               name="description"
               value={formData.description}
@@ -295,8 +284,9 @@ const ExpenseList = () => {
           </div>
 
           <div>
-            <label htmlFor="expenseAmount">Price</label>
+            <label htmlFor="expenseAmount" className="expenseLabel">Price</label>
             <input
+              className="textField"
               id="expenseAmount"
               type="text"
               name="amount"
@@ -309,37 +299,22 @@ const ExpenseList = () => {
             )}
           </div>
 
-          {/*<div>
-            <label htmlFor="expenseFrequency">Frequency</label>
-            <select
-              id="expenseFrequency"
-              name="frequency"
-              value={formData.frequency}
-              disabled
-            >
-              <option value="monthly">Monthly</option>
-            </select>
-            {formErrors.frequency && (
-              <p className="field-error">{formErrors.frequency}</p>
-            )}
-          </div>*/}
-
-          <button type="submit" disabled={creating}>
+          <button type="submit" className="primaryButton" disabled={creating}>
             {creating ? "Submitting..." : "Submit Expense"}
           </button>
         </form>
       </div>
 
-      <div className="actionButtons">
+      <div className="sectionContainer expenseActions">
         <button
-          className="monthlyActivityButton"
+          className="primaryButton"
           type="button"
           onClick={() => navigate("/rent-split")}
         >
           Split Rent
         </button>
         <button
-          className="monthlyActivityButton"
+          className="primaryButton"
           type="button"
           onClick={() => navigate("/monthly-activity")}
         >

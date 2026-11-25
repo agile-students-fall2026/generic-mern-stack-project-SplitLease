@@ -33,179 +33,78 @@
   cursor: pointer;
 }
 
-.expense-list-container {
-  background-color: #c9cad9;
-  width: 100%;
-  min-height: 750px;
-  margin: auto;
-  border-color: #576490;
-  border-radius: 15px;
-  border: 10px solid #576490;
-  box-sizing: border-box;
-  padding: 20px;
-}
-
-.expense-list-container h1 {
-  margin: 20px 0 30px;
-  text-align: center;
-  color: #2b2b2b;
-}
-
-.expense-list,
-.expenses-to-be-settled,
-.expense-details,
-.log-new-expense {
-  background-color: #a3bcf9;
-  width: 70%;
-  margin: 0 auto 24px;
-  border-color: #576490;
-  border-radius: 15px;
-  border: 10px solid #576490;
-  box-sizing: border-box;
-  padding: 20px;
-}
-
-.expense-list h1,
-.expenses-to-be-settled h1,
-.expense-details h1,
-.log-new-expense h1 {
-  margin: 0 0 16px;
-  text-align: center;
-  font-size: 1.8rem;
-  color: #2b2b2b;
-}
-
-.expense-item {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.expense-item button:first-child {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #576490;
-  border-radius: 8px;
-  background-color: #c9cad9;
-  color: #2b2b2b;
-  text-align: left;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.expense-item button:first-child:hover {
-  background-color: #7796cb;
-}
-
-.settleExpenseButton {
-  min-width: 85px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #576490;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.settleExpenseButton:hover {
-  background-color: #47557e;
-}
-
-.settleExpenseButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
-.expense-details p {
-  margin: 10px 0;
-  color: #2b2b2b;
-  font-size: 1rem;
-}
-
-.paidMembersList {
-  margin: 10px 0;
-  color: #2b2b2b;
-}
-
-.expense-details h2 {
-  margin-top: 20px;
-  color: #2b2b2b;
-  font-size: 1.2rem;
-}
-
-.log-new-expense form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.log-new-expense label {
-  display: block;
-  margin-bottom: 8px;
-  color: #2b2b2b;
-  font-weight: 600;
-}
-
-.log-new-expense input,
-.log-new-expense textarea,
-.log-new-expense select {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #576490;
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 1rem;
-  background-color: #f5f6fb;
-  color: #2b2b2b;
-}
-
-.log-new-expense textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.log-new-expense button[type="submit"] {
-  width: 180px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #576490;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.log-new-expense button[type="submit"]:hover {
-  background-color: #47557e;
-}
-
-.log-new-expense button[type="submit"]:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
 .expense-error,
 .field-error {
   color: #8f1d1d;
   font-weight: 600;
 }
 
-.actionButtons {
+.expenseActions {
   display: flex;
   justify-content: center;
   margin-top: 16px;
 }
 
-.monthlyActivityButton {
-  padding: 10px 16px;
+.expenseRows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.expenseSettleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.expenseRowName {
+  flex: 1;
+  padding: 0;
+  background: none;
   border: none;
-  border-radius: 8px;
-  background-color: #576490;
-  color: white;
+  font: inherit;
+  color: inherit;
+  text-align: left;
   cursor: pointer;
 }
+.expenseSettleButton {
+  padding: 6px 14px;
+  font-size: 14px;
+}
+.expenseDetails p {
+  margin: 8px 0;
+  color: var(--slate);
+}
+.expenseSubheading {
+  margin: 16px 0 8px;
+  font-size: 18px;
+  color: var(--slate);
+}
 
-.monthlyActivityButton:hover {
-  background-color: #47557e;
+.paidMembersList {
+  margin: 8px 0;
+  color: var(--slate);
+}
+
+.expenseForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.expenseLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--slate);
+}
+
+.expenseForm textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.expenseActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
