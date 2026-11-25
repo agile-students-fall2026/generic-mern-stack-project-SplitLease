@@ -93,13 +93,6 @@
   overflow-y: auto;
 }
 
-.scrollMessage{
-  margin: 8px 0 0;
-  text-align: center;
-  font-size: 13px;
-  font-style: italic;
-  color: #71767e;
-}
 .quickViewProfSection{
   flex: 1;
   background: #ffffff;
