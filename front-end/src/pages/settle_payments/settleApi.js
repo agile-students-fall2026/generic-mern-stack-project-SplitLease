@@ -19,3 +19,7 @@ export const settlePayment = async (householdId, payment) => {
     throw error;
   }
 };
+export const getDebts = async (householdId) => {
+  const { data } = await axios.get(`/api/households/${householdId}/debts`);
+  return data;
+};

@@ -173,6 +173,37 @@ const getBalances = (householdId) => {
   });
 };
 
+const getDebts = (householdId) => {
+  const balances = getBalances(householdId)
+  const debtors = balances.filter((b) => b.owes > 0).map((b) => ({ ...b }))
+  const creditors = balances
+    .filter((b) => b.owes < 0)
+    .map((b) => ({ ...b, owes: -b.owes }))
+
+  const debts = []
+  let i = 0
+  let j = 0
+
+  while (i < debtors.length && j < creditors.length) {
+    const amount = Math.min(debtors[i].owes, creditors[j].owes)
+
+    debts.push({
+      fromMemberId: debtors[i].memberId,
+      fromName: debtors[i].name,
+      toMemberId: creditors[j].memberId,
+      toName: creditors[j].name,
+      amount: Math.round(amount * 100) / 100,
+    })
+    debtors[i].owes -= amount
+    creditors[j].owes -= amount
+
+    if (debtors[i].owes < 0.01) i++
+    if (creditors[j].owes < 0.01) j++
+  }
+  return debts
+}
+
+
 app.get("/api/households/:householdId/balances", (req, res) => {
   const householdId = Number(req.params.householdId);
 
@@ -188,6 +219,20 @@ app.get("/api/households/:householdId/balances", (req, res) => {
 
   res.json({ householdId, balances });
 });
+
+app.get("/api/households/:householdId/debts", (req, res) => {
+  const householdId = Number(req.params.householdId)
+
+  if (!Number.isInteger(householdId)) {
+    return res.status(400).json({ error: "householdId must be a number" })
+  }
+
+  if (getBalances(householdId).length === 0) {
+    return res.status(404).json({ error: "Household not found" })
+  }
+
+  res.json({ householdId, debts: getDebts(householdId) })
+})
 
 app.post("/api/households/:householdId/settle", (req, res) => {
   const body = req.body || {};
