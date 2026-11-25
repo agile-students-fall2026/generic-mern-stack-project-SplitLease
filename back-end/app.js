@@ -5,6 +5,7 @@ const express = require("express");
 const members = require("./mock-data/members.json")
 const households = require("./mock-data/households.json")
 const expenses = require("./mock-data/expenses.json")
+const activity = require("./mock-data/activity.json")
 
 const { getHouseholdActivity } = require("./services/activityService");
 const purchaseAssetRouter = require("./services/purchase_asset");
@@ -22,6 +23,9 @@ app.get("/api/households", (req, res) => {
 })
 app.get("/api/expenses", (req, res) => {
   res.json(expenses)
+})
+app.get("/api/activity", (req, res) => {
+  res.json(activity)
 })
 app.post("/api/expenses", (req, res) => {
   const { name, description, price } = req.body || {}

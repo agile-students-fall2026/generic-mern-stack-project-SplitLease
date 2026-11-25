@@ -7,7 +7,8 @@ import { getCurrentUser } from '../login/authApi'
 export const getMonthlyActivity = async () => {
   const [membersRes, activityRes] = await Promise.all([
     axios.get("/api/members"),
-    axios.get(import.meta.env.VITE_ACTIVITY_API_URL),
+    axios.get("/api/activity"),
+    
   ])
 
   // only show the logged-in user's household; show everything if nobody has logged in
