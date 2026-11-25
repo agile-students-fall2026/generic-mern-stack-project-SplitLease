@@ -1,4 +1,3 @@
-// back-end/services/recurringBillService.js
 const MONTHLY = "monthly"
 
 let nextId = 10000

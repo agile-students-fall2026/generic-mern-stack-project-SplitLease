@@ -1,4 +1,3 @@
-// back-end/services/expenseService.js
 const axios = require("axios")
 const { listRecurringBills } = require("./recurringBillService")
 

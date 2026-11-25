@@ -1,4 +1,3 @@
-// back-end/tests/expenseService.test.js
 const { expect } = require("chai")
 
 const {

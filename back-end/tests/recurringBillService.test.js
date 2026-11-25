@@ -1,4 +1,3 @@
-// back-end/tests/recurringBillService.test.js
 const { expect } = require("chai")
 
 const {
