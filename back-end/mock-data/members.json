@@ -1,12 +1,101 @@
 [
-  { "id": 1, "first_name": "Demo", "last_name": "User", "email": "demo@splitlease.com", "password": "password123", "routing_num": "101918965", "household_id": 1 },
-  { "id": 2, "first_name": "Jane", "last_name": "Doe", "email": "janedoe@gmail.com", "password": "johndoe", "routing_num": "104903294", "household_id": 1 },
-  { "id": 3, "first_name": "Nollie", "last_name": "Beckley", "email": "test3@gmail.com", "password": "pass", "routing_num": "071006282", "household_id": 1 },
-  { "id": 4, "first_name": "Melonie", "last_name": "Hegerty", "email": "test4@gmail.com", "password": "pass", "routing_num": "021001318", "household_id": 2 },
-  { "id": 5, "first_name": "Shawn", "last_name": "Thompson", "email": "test5@splitlease.com", "password": "pass", "routing_num": "062203269", "household_id": 2 },
-  { "id": 6, "first_name": "Nicolai", "last_name": "Dulling", "email": "test6@gmail.com", "password": "pass", "routing_num": "065503348", "household_id": 1 },
-  { "id": 7, "first_name": "Thorsten", "last_name": "Baldrey", "email": "test7@gmail.com", "password": "pass", "routing_num": "063113523", "household_id": 2 },
-  { "id": 8, "first_name": "Anjela", "last_name": "Dorken", "email": "test8@splitlease.com", "password": "password123", "routing_num": "122402081", "household_id": 1 },
-  { "id": 9, "first_name": "Renata", "last_name": "Labadini", "email": "test9@gmail.com", "password": "pass", "routing_num": "104901827", "household_id": 2 },
-  { "id": 10, "first_name": "John", "last_name": "Doe", "email": "janedoe@gmail.com", "password": "johndoe", "routing_num": "104903294", "household_id": 2 }
+  {
+    "id": 1,
+    "first_name": "Demo",
+    "last_name": "User",
+    "email": "demo@splitlease.com",
+    "password": "password123",
+    "routing_num": "101918965",
+    "household_ids": [1, 2, 3]
+  },
+  {
+    "id": 2,
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "janedoe@gmail.com",
+    "password": "johndoe",
+    "routing_num": "104903294",
+    "household_ids": [1]
+  },
+  {
+    "id": 3,
+    "first_name": "Nollie",
+    "last_name": "Beckley",
+    "email": "test3@gmail.com",
+    "password": "pass",
+    "routing_num": "071006282",
+    "household_ids": [1]
+  },
+  {
+    "id": 4,
+    "first_name": "Melonie",
+    "last_name": "Hegerty",
+    "email": "test4@gmail.com",
+    "password": "pass",
+    "routing_num": "021001318",
+    "household_ids": [2]
+  },
+  {
+    "id": 5,
+    "first_name": "Shawn",
+    "last_name": "Thompson",
+    "email": "test5@splitlease.com",
+    "password": "pass",
+    "routing_num": "062203269",
+    "household_ids": [2]
+  },
+  {
+    "id": 6,
+    "first_name": "Nicolai",
+    "last_name": "Dulling",
+    "email": "test6@gmail.com",
+    "password": "pass",
+    "routing_num": "065503348",
+    "household_ids": [1]
+  },
+  {
+    "id": 7,
+    "first_name": "Thorsten",
+    "last_name": "Baldrey",
+    "email": "test7@gmail.com",
+    "password": "pass",
+    "routing_num": "063113523",
+    "household_ids": [2]
+  },
+  {
+    "id": 8,
+    "first_name": "Anjela",
+    "last_name": "Dorken",
+    "email": "test8@splitlease.com",
+    "password": "password123",
+    "routing_num": "122402081",
+    "household_ids": [1]
+  },
+  {
+    "id": 9,
+    "first_name": "Renata",
+    "last_name": "Labadini",
+    "email": "test9@gmail.com",
+    "password": "pass",
+    "routing_num": "104901827",
+    "household_ids": [2]
+  },
+  {
+    "id": 10,
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "janedoe@gmail.com",
+    "password": "johndoe",
+    "routing_num": "104903294",
+    "household_ids": [2]
+  },
+  {
+    "id": 11,
+    "first_name": "Empty",
+    "last_name": "Tester",
+    "email": "empty@splitlease.com",
+    "password": "password123",
+    "routing_num": "000000000",
+    "household_ids": [3]
+  }
 ]

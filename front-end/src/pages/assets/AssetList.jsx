@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
+import { getCurrentUser } from "../login/authApi";
 import "./AssetList.css";
 import Header from "../../components/Header";
 
@@ -12,14 +13,15 @@ const AssetList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios("/api/assets")
-      .then((response) => {
-        console.log("API Response:", response.data);
-        setAssets(response.data);
+    const user = getCurrentUser();
+    if (!user?.householdId) return;
+
+    axios
+      .get(`/api/households/${user.householdId}/assets`, {
+        params: { memberId: user.id },
       })
-      .catch((err) => {
-        console.error("Error getting assets:", err);
-      });
+      .then((response) => setAssets(response.data))
+      .catch((err) => console.error("Error getting assets:", err));
   }, []);
 
   const filteredAssets = assets.filter((asset) =>

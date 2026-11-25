@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { useNavigate } from "react-router-dom";
 import "./UserHomePage.css";
-import axios from "axios";
+import { getCurrentUser, saveCurrentUser } from "../login/authApi";
 import HeaderHome from "../../components/HeaderHome";
 
 function UserHomePage() {
@@ -14,9 +15,7 @@ function UserHomePage() {
   useEffect(() => {
     const fetchHouseholds = async () => {
       try {
-        const response = await axios.get(
-          "/api/households",
-        );
+        const response = await axios.get("/api/households");
         const uniqueHouseholds = response.data.filter(
           (household, index, self) =>
             index ===
@@ -24,8 +23,11 @@ function UserHomePage() {
               (h) => h.household_name === household.household_name,
             ),
         );
-
-        setHouseholds(uniqueHouseholds);
+        const user = getCurrentUser();
+        const mine = uniqueHouseholds.filter((h) =>
+          user?.householdIds?.includes(h.id),
+        );
+        setHouseholds(mine);
       } catch (error) {
         console.error("Error fetching households:", error);
       }
@@ -52,7 +54,7 @@ function UserHomePage() {
           User Profile
         </button>
       </header> */}
-      <HeaderHome user={userName}/>
+      <HeaderHome user={userName} />
 
       <div className="householdListContainer">
         <p className="fieldText">My Households</p>
@@ -71,7 +73,13 @@ function UserHomePage() {
                 key={household.id || index}
                 type="button"
                 className="householdItem"
-                onClick={() => navigate("/household")}
+                onClick={() => {
+                  saveCurrentUser({
+                    ...getCurrentUser(),
+                    householdId: household.id,
+                  });
+                  navigate("/household");
+                }}
               >
                 {household.household_name || household.name || household}
               </button>
@@ -80,20 +88,24 @@ function UserHomePage() {
         </div>
       </div>
 
-            <div className="actionButtons">
-                <button
-                    className="createButton"
-                    type="button"
-                    onClick={() => navigate('/create')}
-                >
-                    Create Household
-                </button>
-                <button className="createButton"
-                        type="button"
-                        onClick={() => navigate('/join-household')}>Join Household</button>
-            </div>
-        </div>
-    );
+      <div className="actionButtons">
+        <button
+          className="createButton"
+          type="button"
+          onClick={() => navigate("/create")}
+        >
+          Create Household
+        </button>
+        <button
+          className="createButton"
+          type="button"
+          onClick={() => navigate("/join-household")}
+        >
+          Join Household
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default UserHomePage;
