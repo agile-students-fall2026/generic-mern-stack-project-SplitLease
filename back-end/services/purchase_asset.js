@@ -67,14 +67,26 @@ const uploadImage = (req, res, next) => {
 
 let members = null;
 
+// const loadMembers = async () => {
+//   const response = await axios.get(
+//     `${process.env.API_MEMBERS_URL}?key=${process.env.API_SECRET_KEY}`,
+//   );
+//   members = response.data.map((m) => ({
+//     id: m.id,
+//     first_name: m.first_name,
+//     last_name: m.last_name,
+//     household_id: m.household_id,
+//   }));
+//   return members;
+// };
+const localMembers = require("../mock-data/members.json");
 const loadMembers = async () => {
-  const response = await axios.get(
-    `${process.env.API_MEMBERS_URL}?key=${process.env.API_SECRET_KEY}`,
-  );
-  members = response.data.map((m) => ({
+  members = localMembers.map((m) => ({
     id: m.id,
     first_name: m.first_name,
     last_name: m.last_name,
+    email: m.email,
+    routing_num: m.routing_num,
     household_id: m.household_id,
   }));
   return members;
@@ -211,18 +223,11 @@ const validateAsset = async (req, res, next) => {
 
 const addedAssets = [];
 
-router.get("/api/assets", async (req, res) => {
-  try {
-    const response = await axios.get(
-      `${process.env.API_ASSETS_URL}?key=${process.env.API_SECRET_KEY}`,
-    );
-    res.json([...addedAssets, ...response.data]);
-  } catch (err) {
-    console.error("Error getting mock assets:", err.message);
-    res.json(addedAssets);
-  }
-});
+const localAssets = require("../mock-data/assets.json");
 
+router.get("/api/assets", (req, res) => {
+  res.json([...addedAssets, ...localAssets]);
+});
 router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
   const name = String(req.body.name).trim();
   const price = Number(req.body.price);

@@ -1,13 +1,7 @@
-const axios = require("axios")
+const localMembers = require("../mock-data/members.json")
+const loadLocalMembers = async () => localMembers
 
-const loadMockarooMembers = async () => {
-    const response = await axios.get(process.env.MOCKAROO_MEMBERS_API_URL)
-    return response.data
-}
-
-// Checks an email and password against the members list.
-// Returns the member without their password, or null if nothing matches.
-const loginUser = async (email, password, loadMembers = loadMockarooMembers) => {
+const loginUser = async (email, password, loadMembers = loadLocalMembers) => {
     const members = await loadMembers()
     const normalizedEmail = String(email).trim().toLowerCase()
 
@@ -36,7 +30,7 @@ const MIN_PASSWORD_LENGTH = 8
 // Checks the sign-up form and makes sure the email is not already used by a member.
 // Returns { errors } when something is wrong, or { user } for the new account.
 // Nothing is saved yet; accounts will be stored once the database is added.
-const registerUser = async (form = {}, loadMembers = loadMockarooMembers) => {
+const registerUser = async (form = {}, loadMembers = loadLocalMembers) => {
     const name = String(form.name || "").trim()
     const email = String(form.email || "").trim().toLowerCase()
     const password = form.password || ""

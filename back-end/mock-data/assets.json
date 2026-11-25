@@ -1,0 +1,5 @@
+[{"id":1,"asset_name":"Vacuum","description":"Nulla nisl.","price":457.52,"date":"05/18/2026","paid_by":null},
+{"id":2,"asset_name":"Air Fryer","description":"Proin interdum mauris non ligula pellentesque ultrices.","price":195.44,"date":"04/27/2026","paid_by":null},
+{"id":3,"asset_name":"65-inch TV","description":"Morbi vel lectus in quam fringilla rhoncus.","price":724.06,"date":"02/27/2026","paid_by":null},
+{"id":4,"asset_name":"Air Fryer","description":"Suspendisse potenti.","price":396.99,"date":"02/19/2026","paid_by":null},
+{"id":5,"asset_name":"65-inch TV","description":"In hac habitasse platea dictumst.","price":441.53,"date":"08/18/2026","paid_by":null}]

@@ -1,21 +1,27 @@
-const axios = require("axios")
+const localMembers = require("../mock-data/members.json")
+const localActivity = require("../mock-data/activity.json")
 
-const loadMockarooData = async () => {
-    const [membersResponse, activityResponse] = await Promise.all([
-        axios.get(process.env.MOCKAROO_MEMBERS_API_URL),
-        axios.get(process.env.MOCKAROO_ACTIVITY_API_URL),
-    ])
+const loadLocalData = async () => ({
+    members: localMembers,
+    activity: localActivity,
+})
 
-    return {
-        members: membersResponse.data,
-        activity: activityResponse.data,
-    }
-}
+// const loadMockarooData = async () => {
+//     const [membersResponse, activityResponse] = await Promise.all([
+//         axios.get(process.env.MOCKAROO_MEMBERS_API_URL),
+//         axios.get(process.env.MOCKAROO_ACTIVITY_API_URL),
+//     ])
+
+//     return {
+//         members: membersResponse.data,
+//         activity: activityResponse.data,
+//     }
+// }
 
 const getHouseholdActivity = async (
     householdId,
     now = new Date(),
-    loadData = loadMockarooData,
+    loadData = loadLocalData,
 ) => {
     const {members: allMembers, activity: allActivity} = await loadData()
 

@@ -15,6 +15,7 @@ const EMPTY_FORM = {
   amount: "",
   frequency: "monthly",
 }
+import Header from '../../components/Header';
 
 const ExpenseList = () => {
   const navigate = useNavigate()
@@ -137,8 +138,8 @@ const ExpenseList = () => {
   }
 
   return (
-    <div className="expense-list-container">
-      <header className="header">
+    <div className="mainContainer">
+      {/* <header className="header">
         <button
           type="button"
           className="logoButton"
@@ -154,10 +155,10 @@ const ExpenseList = () => {
         <button className="backButton" onClick={() => navigate("/household")}>
           Back
         </button>
-      </header>
+      </header> */}
 
-      <h1>Household Expenses</h1>
-
+      {/* <h1>Household Expenses</h1> */}
+        <Header page_title= "Household Expenses" backTo="/household"/>
       {pageError && <p className="expense-error">{pageError}</p>}
 
       <div className="expense-list">

@@ -6,7 +6,7 @@ import axios from 'axios';
 import './ManageMembers.css';
 import ManageMemberRow from '../../components/ManageMemberRow';
 import MemberQuickView from '../../components/MemberQuickView';
-import HeaderButtons from "../../components/HeaderButtons";
+import Header from '../../components/Header';
 import { removeRoommate } from './roommateApi';
 import { getCurrentUser } from '../login/authApi';
 
@@ -46,7 +46,7 @@ const ManageMembersPage = () => {
     useEffect(() => {
         const fetchMembers = async () => {
             try{
-                const response = await axios.get(import.meta.env.VITE_MEMBERS_API_URL)
+                const response = await axios.get("/api/members")
                 if (Array.isArray(response.data)) {
                     setMembers(response.data)
                 }else {
@@ -66,10 +66,7 @@ const ManageMembersPage = () => {
 
     return(
         <div className='mainContainer'> {/* Parent div */}
-            <div className="header">
-                <HeaderButtons backTo='/household'/>
-                <h1 className="pageTitle">Manage Members</h1>
-            </div>
+                 <Header page_title="Manage Members" backTo="/household" />
                 
             
             <div>

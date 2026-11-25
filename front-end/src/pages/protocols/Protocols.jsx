@@ -24,14 +24,14 @@ const Protocols = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(import.meta.env.VITE_PROTOCOLS_API_URL).then((response) => {
+    axios.get("/api/protocols").then((response) => {
       setProtocols(response.data.map(normalizeProtocol));
       setLoading(false);
     });
   }, []);
 
   useEffect(() => {
-    axios.get(import.meta.env.VITE_MEMBERS_API_URL).then((response) => {
+    axios.get("/api/members").then((response) => {
       setMembers(response.data);
     });
   }, []);
