@@ -15,6 +15,7 @@ const householdService = require("./services/householdService");
 const roommateService = require("./services/roommateService");
 const recurringBillService = require("./services/recurringBillService");
 const expenseService = require("./services/expenseService");
+const deleteAssetRouter = require("./services/delete_asset");
 const { router: itemValueRouter } = require("./services/item_value");
 
 const app = express();
@@ -22,6 +23,7 @@ const app = express();
 app.use(express.json());
 app.use(purchaseAssetRouter);
 app.use(editAssetRouter);
+app.use(deleteAssetRouter);
 app.use(itemValueRouter);
 
 app.get("/api/households", (req, res) => {
@@ -142,7 +144,7 @@ app.delete(
   },
 );
 
-const payments = []
+const payments = [];
 
 const getBalances = (householdId) => {
   const householdMembers = members.filter((m) =>
@@ -162,11 +164,12 @@ const getBalances = (householdId) => {
         owes -= expense.price;
       }
     });
-    payments .filter((p) => p.householdId === householdId)
+    payments
+      .filter((p) => p.householdId === householdId)
       .forEach((p) => {
-        if (p.fromMemberId === member.id) owes -= p.amount
-        if (p.toMemberId === member.id) owes += p.amount
-      })
+        if (p.fromMemberId === member.id) owes -= p.amount;
+        if (p.toMemberId === member.id) owes += p.amount;
+      });
     return {
       memberId: member.id,
       name: `${member.first_name} ${member.last_name}`,
@@ -176,18 +179,18 @@ const getBalances = (householdId) => {
 };
 
 const getDebts = (householdId) => {
-  const balances = getBalances(householdId)
-  const debtors = balances.filter((b) => b.owes > 0).map((b) => ({ ...b }))
+  const balances = getBalances(householdId);
+  const debtors = balances.filter((b) => b.owes > 0).map((b) => ({ ...b }));
   const creditors = balances
     .filter((b) => b.owes < 0)
-    .map((b) => ({ ...b, owes: -b.owes }))
+    .map((b) => ({ ...b, owes: -b.owes }));
 
-  const debts = []
-  let i = 0
-  let j = 0
+  const debts = [];
+  let i = 0;
+  let j = 0;
 
   while (i < debtors.length && j < creditors.length) {
-    const amount = Math.min(debtors[i].owes, creditors[j].owes)
+    const amount = Math.min(debtors[i].owes, creditors[j].owes);
 
     debts.push({
       fromMemberId: debtors[i].memberId,
@@ -195,16 +198,15 @@ const getDebts = (householdId) => {
       toMemberId: creditors[j].memberId,
       toName: creditors[j].name,
       amount: Math.round(amount * 100) / 100,
-    })
-    debtors[i].owes -= amount
-    creditors[j].owes -= amount
+    });
+    debtors[i].owes -= amount;
+    creditors[j].owes -= amount;
 
-    if (debtors[i].owes < 0.01) i++
-    if (creditors[j].owes < 0.01) j++
+    if (debtors[i].owes < 0.01) i++;
+    if (creditors[j].owes < 0.01) j++;
   }
-  return debts
-}
-
+  return debts;
+};
 
 app.get("/api/households/:householdId/balances", (req, res) => {
   const householdId = Number(req.params.householdId);
@@ -223,18 +225,18 @@ app.get("/api/households/:householdId/balances", (req, res) => {
 });
 
 app.get("/api/households/:householdId/debts", (req, res) => {
-  const householdId = Number(req.params.householdId)
+  const householdId = Number(req.params.householdId);
 
   if (!Number.isInteger(householdId)) {
-    return res.status(400).json({ error: "householdId must be a number" })
+    return res.status(400).json({ error: "householdId must be a number" });
   }
 
   if (getBalances(householdId).length === 0) {
-    return res.status(404).json({ error: "Household not found" })
+    return res.status(404).json({ error: "Household not found" });
   }
 
-  res.json({ householdId, debts: getDebts(householdId) })
-})
+  res.json({ householdId, debts: getDebts(householdId) });
+});
 
 app.post("/api/households/:householdId/settle", (req, res) => {
   const body = req.body || {};
@@ -270,8 +272,8 @@ app.post("/api/households/:householdId/settle", (req, res) => {
       .status(400)
       .json({ error: `${payer.name} only owes $${payer.owes.toFixed(2)}` });
   }
-  payments.push({ householdId, fromMemberId, toMemberId, amount })
-  
+  payments.push({ householdId, fromMemberId, toMemberId, amount });
+
   res.status(201).json({
     status: "success",
     message: `${payer.name} paid ${payee.name} $${amount.toFixed(2)}`,
