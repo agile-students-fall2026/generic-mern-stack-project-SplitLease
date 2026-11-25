@@ -1,4 +1,7 @@
-const axios = require("axios")
+// back-end/services/expenseService.js
+const localExpenses = require("../mock-data/expenses.json")
+const localMembers = require("../mock-data/members.json")
+
 const { listRecurringBills } = require("./recurringBillService")
 
 let settlements = new Map()
@@ -6,11 +9,9 @@ let settlements = new Map()
 const toId = (value) =>
   Number.isInteger(Number(value)) ? Number(value) : null
 
-const loadExpenses = async () =>
-  (await axios.get(process.env.MOCKAROO_EXPENSES_API_URL)).data
+const loadExpenses = async () => localExpenses
 
-const loadMembers = async () =>
-  (await axios.get(process.env.MOCKAROO_MEMBERS_API_URL)).data
+const loadMembers = async () => localMembers
 
 const payerIds = (paidBy, members) =>
   String(paidBy || "")

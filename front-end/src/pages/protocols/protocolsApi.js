@@ -5,11 +5,11 @@ import { getCurrentUser } from "../login/authApi";
 // and turns them into the shape the Protocols page uses.
 export const getHouseholdProtocols = async () => {
   const [membersRes, protocolsRes, households] = await Promise.all([
-    axios.get(import.meta.env.VITE_MEMBERS_API_URL),
-    axios.get(import.meta.env.VITE_PROTOCOLS_API_URL),
+    axios.get("/api/members"),
+    axios.get("/api/protocols"),
     // the households table is only used for the name, so the page still loads if it fails
     axios
-      .get(import.meta.env.VITE_HOUSEHOLDS_API_URL)
+      .get("/api/households")
       .then((res) => res.data)
       .catch(() => []),
   ]);
@@ -27,7 +27,7 @@ export const getHouseholdProtocols = async () => {
     ? households.find((h) => h.id === householdId)
     : null;
   const householdName =
-    (householdRecord && householdRecord.name) || `Household ${householdId}`;
+    (householdRecord && householdRecord.household_name) || `Household ${householdId}`;
 
   const nameOf = (id) => {
     const member = allMembers.find((m) => m.id === id);

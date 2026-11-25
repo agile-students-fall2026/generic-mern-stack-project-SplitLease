@@ -1,14 +1,13 @@
-import { Link } from "react-router-dom";
-import SplitLeaseLogo from "../assets/splitlease-blank-background-logo.png";
+import HeaderButtons from "./HeaderButtons";
+import "./Header.css";
 
-function Header() {
+const Header = ({ page_title, backTo }) => {
   return (
-    <header style={{ display: "flex", justifyContent: "center" }}>
-      <Link to="/">
-        <img src={SplitLeaseLogo} alt="Split Lease" height="60" />
-      </Link>
-    </header>
+    <div className="pageHeader">
+      <HeaderButtons backTo={backTo} />
+      <h1 className="pageHeaderTitle">{page_title}</h1>
+    </div>
   );
-}
+};
 
 export default Header;
