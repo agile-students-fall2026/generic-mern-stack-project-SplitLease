@@ -295,6 +295,62 @@ app.get("/api/households/:householdId/expenses", async (req, res, next) => {
   }
 });
 
+app.post("/api/households/:householdId/recurring-bills", (req, res) => {
+  const result = recurringBillService.createRecurringBill(
+    req.params.householdId,
+    req.body || {},
+  );
+
+  if (result.errors) {
+    return res.status(400).json({ errors: result.errors });
+  }
+
+  if (result.error) {
+    return res.status(result.status).json({ error: result.error });
+  }
+
+  return res.status(201).json({ bill: result.bill });
+});
+
+app.post("/api/households/:householdId/expenses", async (req, res, next) => {
+  try {
+    const body = req.body || {};
+    const result = await expenseService.createHouseholdExpense(
+      req.params.householdId,
+      body,
+      body.payerId,
+    );
+
+    if (result.errors) {
+      return res.status(400).json({ errors: result.errors });
+    }
+
+    if (result.error) {
+      return res.status(result.status).json({ error: result.error });
+    }
+
+    return res.status(201).json({ expense: result.expense });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+app.get("/api/households/:householdId/expenses", async (req, res, next) => {
+  try {
+    const result = await expenseService.listHouseholdExpenses(
+      req.params.householdId,
+    );
+
+    if (result.error) {
+      return res.status(result.status).json({ error: result.error });
+    }
+
+    return res.json(result);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 app.post(
   "/api/households/:householdId/expenses/:expenseId/settlements",
   async (req, res, next) => {
