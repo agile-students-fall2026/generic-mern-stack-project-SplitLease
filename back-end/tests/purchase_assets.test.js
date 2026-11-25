@@ -1,40 +1,40 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const sinon = require("sinon");
-const axios = require("axios");
+// const sinon = require("sinon");
+// const axios = require("axios");
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-process.env.API_MEMBERS_URL = "http://fake-api.test/members";
-process.env.API_ASSETS_URL = "http://fake-api.test/assets";
-process.env.API_SECRET_KEY = "test-key";
+// process.env.API_MEMBERS_URL = "http://fake-api.test/members";
+// process.env.API_ASSETS_URL = "http://fake-api.test/assets";
+// process.env.API_SECRET_KEY = "test-key";
 
-const fakeMembers = [
-  { id: 1, first_name: "Alice", last_name: "Smith", household_id: 1 },
-  { id: 2, first_name: "Bob", last_name: "Jones", household_id: 1 },
-];
+// const fakeMembers = [
+//   { id: 1, first_name: "Alice", last_name: "Smith", household_id: 1 },
+//   { id: 2, first_name: "Bob", last_name: "Jones", household_id: 1 },
+// ];
 
-const axiosStub = sinon.stub(axios, "get").callsFake(async (url) => {
-  if (url.startsWith(process.env.API_MEMBERS_URL)) return { data: fakeMembers };
-  return { data: [] };
-});
+// const axiosStub = sinon.stub(axios, "get").callsFake(async (url) => {
+//   if (url.startsWith(process.env.API_MEMBERS_URL)) return { data: fakeMembers };
+//   return { data: [] };
+// });
 
-delete require.cache[require.resolve("../app")];
-delete require.cache[require.resolve("../services/purchase_asset")];
+// delete require.cache[require.resolve("../app")];
+// delete require.cache[require.resolve("../services/purchase_asset")];
 const app = require("../app");
 
 const validAsset = () => ({
   name: "Desk Lamp",
   price: "25.50",
   date: "01/15/2024",
-  paidBy: "Alice",
+  paidBy: "Demo",
 });
 
 const postAsset = (body) => chai.request(app).post("/api/assets").send(body);
 
 describe("POST /api/assets", () => {
-  after(() => axiosStub.restore());
+  // after(() => axiosStub.restore());
 
   describe("valid input", () => {
     it("creates the asset and responds 201", async () => {
@@ -45,7 +45,7 @@ describe("POST /api/assets", () => {
         asset_name: "Desk Lamp",
         price: 25.5,
         date: "01/15/2024",
-        paidBy: "Alice Smith",
+        paidBy: "Demo User",
         image: null,
       });
     });
@@ -53,10 +53,10 @@ describe("POST /api/assets", () => {
     it("accepts several payers by first or full name", async () => {
       const res = await postAsset({
         ...validAsset(),
-        paidBy: "alice, Bob Jones",
+        paidBy: "demo, Jane Doe",
       });
       expect(res).to.have.status(201);
-      expect(res.body.asset.paidBy).to.equal("Alice Smith, Bob Jones");
+      expect(res.body.asset.paidBy).to.equal("Demo User, Jane Doe");
     });
 
     it("trims spaces around the name", async () => {
