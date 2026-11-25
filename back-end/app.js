@@ -210,6 +210,20 @@ app.post("/api/households/:householdId/settle", (req, res) => {
     },
   })
 })
+
+app.get("/api/households/:householdId/members/:memberId/balance", (req, res) => {
+  const householdId = Number(req.params.householdId)
+  const memberId = Number(req.params.memberId)
+
+  const balance = getBalances(householdId).find((b) => b.memberId === memberId)
+
+  if (!balance) {
+    return res.status(404).json({ error: "Member not found in this household" })
+  }
+
+  res.json(balance)
+})
+
 app.use((error, req, res, next) => {
   console.error(error);
 
