@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import "./AssetList.css";
+import Header from '../../components/Header';
 
 const AssetList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,32 +28,16 @@ const AssetList = () => {
 
   return (
     <div className="asset-page-container">
-      <div className="asset-header">
-        <button
-          type="button"
-          className="logoButton"
-          onClick={() => navigate("/home")}
-        >
-          <img
-            src={SplitLeaseLogo}
-            alt="SplitLease Logo"
-            className="headerLogo"
-          />
-        </button>
-        <button className="backButton" onClick={() => navigate("/household")}>
-          Back
-        </button>
-      </div>
 
-      <main className="main-container">
+      <Header page_title="Assets" backTo="/household" />
+
+      <main className="mainContainer">
         {/* Outer box */}
-        <div className="assets-outer-container">
-          <h1 className="asset-page-title">Assets</h1>
 
           <div className="action-container">
             <div className="create-container">
               <button
-                className="create-asset-button"
+                className="primaryButton"
                 onClick={() => navigate("/assets/create")}
               >
                 Create Asset
@@ -99,7 +84,6 @@ const AssetList = () => {
                 <p className="no-assets">No assets found.</p>
               )}
             </div>
-          </div>
         </div>
       </main>
     </div>

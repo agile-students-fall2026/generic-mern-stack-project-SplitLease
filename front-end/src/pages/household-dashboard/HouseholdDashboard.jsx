@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
+// import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import "./HouseholdDashboard.css";
 import axios from "axios";
+import Header from '../../components/Header';
 
 const HouseholdDashboard = () => {
   const navigate = useNavigate();
@@ -22,31 +23,15 @@ const HouseholdDashboard = () => {
   }, []);
 
   return (
-    <div className="household-dashboard-container">
-      <header className="header">
-        <button
-          type="button"
-          className="logoButton"
-          onClick={() => navigate("/home")}
-        >
-          <img
-            src={SplitLeaseLogo}
-            alt="SplitLease Logo"
-            className="headerLogo"
-          />
-        </button>
-        <button className="backButton" onClick={() => navigate("/home")}>
-          Back
-        </button>
-      </header>
-      <h1>Household Dashboard</h1>
+    <div className="mainContainer">
+      <Header page_title="Household Dashboard" backTo="/home" />
 
-      <div className="dashboardGrid">
+      <div className="sectionContainer">
         <div className="membersListContainer">
-          <div className="secitonHeader">
+          <div className="sectionTitle">
             <p className="fieldText">Members</p>
             <button
-              className="manageMembersButton"
+              className="primaryButton"
               onClick={() => navigate("/manage-members")}
             >
               Manage Members
@@ -65,7 +50,7 @@ const HouseholdDashboard = () => {
                 <button
                   key={member.id || index}
                   type="button"
-                  className="memebersItem"
+                  className="listRow"
                   onClick={() => console.log("Selected:", member.first_name || member)}
                 >
                   {member.first_name || member}

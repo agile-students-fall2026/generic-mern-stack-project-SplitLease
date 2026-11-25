@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import "./ExpenseList.css";
 import axios from "axios";
+import Header from '../../components/Header';
 
 const ExpenseList = () => {
   const navigate = useNavigate();
@@ -74,8 +75,8 @@ const ExpenseList = () => {
   };
 
   return (
-    <div className="expense-list-container">
-      <header className="header">
+    <div className="mainContainer">
+      {/* <header className="header">
         <button
           type="button"
           className="logoButton"
@@ -91,10 +92,10 @@ const ExpenseList = () => {
         <button className="backButton" onClick={() => navigate("/household")}>
           Back
         </button>
-      </header>
+      </header> */}
 
-      <h1>Household Expenses</h1>
-
+      {/* <h1>Household Expenses</h1> */}
+        <Header page_title= "Household Expenses" backTo="/household"/>
       <div className="expense-list">
         <h1>My Expenses</h1>
 

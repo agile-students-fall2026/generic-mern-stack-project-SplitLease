@@ -3,7 +3,7 @@ import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { useNavigate } from "react-router-dom";
 import "./UserHomePage.css";
 import axios from "axios";
-
+import HeaderHome from "../../components/HeaderHome";
 
 function UserHomePage() {
   const userName = "[user]";
@@ -35,8 +35,8 @@ function UserHomePage() {
   }, []);
 
   return (
-    <div className="createUserHomePageContainer">
-      <header className="header">
+    <div className="mainContainer">
+      {/* <header className="header">
         <button
           type="button"
           className="logoButton"
@@ -51,9 +51,8 @@ function UserHomePage() {
         <button className="profileButton" onClick={() => navigate("/profile")}>
           User Profile
         </button>
-      </header>
-
-      <h1>Welcome Back, {userName}!</h1>
+      </header> */}
+      <HeaderHome user={userName}/>
 
       <div className="householdListContainer">
         <p className="fieldText">My Households</p>

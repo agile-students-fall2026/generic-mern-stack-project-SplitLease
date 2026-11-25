@@ -2,6 +2,7 @@ import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import HeaderButtons from '../../components/HeaderButtons';
 import './Profile.css';
 
 const Profile = () => {
@@ -36,16 +37,8 @@ const Profile = () => {
     }, []);
 
     return (
-        <div className="profile-page-container">
-            <div className="asset-header">
-                <button type="button" className="logoButton" onClick={() => navigate('/home')}>
-                    <img src={SplitLeaseLogo} alt="SplitLease Logo" className="headerLogo"/>
-                </button>
-                <button className="backButton" onClick={() => navigate('/home')}>
-                    Back
-                </button>
-            </div>
-
+        <div className="mainContainer">
+            <HeaderButtons backTo="/home"/>
             <div className="profile-header-card">
                 <div className="profile-pic-container">
                     <img 
