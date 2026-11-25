@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import { getCurrentUser } from "../login/authApi";
-import { getBalances, settlePayment } from "./settleApi";
+import { getBalances, getDebts, settlePayment } from "./settleApi";
 import "./SettlePayments.css";
 
 const formatMoney = (amount) => `$${Math.abs(amount).toFixed(2)}`;
 
 const SettlePayments = () => {
-  const currentUser = getCurrentUser();
-  const householdId = currentUser?.householdId;
+    const currentUser = getCurrentUser();
+    const householdId = currentUser?.householdId;
 
-  const [balances, setBalances] = useState([]);
-  const [toMemberId, setToMemberId] = useState("");
-  const [amount, setAmount] = useState("");
-  const [message, setMessage] = useState(null);
+    const [balances, setBalances] = useState([]);
+    const [debts, setDebts] = useState([]);
+    const [toMemberId, setToMemberId] = useState("");
+    const [amount, setAmount] = useState("");
+    const [message, setMessage] = useState(null);
 
   useEffect(() => {
     if (!householdId) return;
@@ -21,6 +22,11 @@ const SettlePayments = () => {
     getBalances(householdId)
       .then((data) => setBalances(data.balances))
       .catch(() => setMessage({ type: "error", text: "Could not load balances." }));
+      
+    getDebts(householdId)
+      .then((data) => setDebts(data.debts))
+      .catch(() => setMessage({ type: "error", text: "Could not load who owes whom." }));
+
   }, [householdId]);
 
   const roommates = balances.filter((balance) => balance.memberId !== currentUser?.id);
@@ -45,6 +51,8 @@ const SettlePayments = () => {
       setAmount("");
       const updated = await getBalances(householdId);
       setBalances(updated.balances);
+      const updatedDebts = await getDebts(householdId);
+      setDebts(updatedDebts.debts);
     } catch {
       setMessage({ type: "error", text: "Could not reach the server. Please try again." });
     }
@@ -77,6 +85,20 @@ const SettlePayments = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="sectionContainer">
+        <h2 className="sectionTitle">Who Owes Whom</h2>
+        {debts.length === 0 ? (
+          <p className="settleMessage">Everyone is even!</p>
+        ) : (
+          debts.map((debt) => (
+            <div key={`${debt.fromMemberId}-${debt.toMemberId}`} className="listRow settleRow">
+              <span>{debt.fromName} → {debt.toName}</span>
+              <span>{formatMoney(debt.amount)}</span>
+            </div>
+          ))
+        )}
       </div>
 
       <form className="sectionContainer" onSubmit={handleSubmit}>
