@@ -7,7 +7,7 @@ import { getCurrentUser, saveCurrentUser } from "../login/authApi";
 import HeaderHome from "../../components/HeaderHome";
 
 function UserHomePage() {
-  const userName = "[user]";
+  const userName = getCurrentUser()?.firstName || "";
   const navigate = useNavigate();
 
   const [households, setHouseholds] = useState([]);
@@ -38,41 +38,25 @@ function UserHomePage() {
 
   return (
     <div className="mainContainer">
-      {/* <header className="header">
-        <button
-          type="button"
-          className="logoButton"
-          onClick={() => navigate("/home")}
-        >
-          <img
-            src={SplitLeaseLogo}
-            alt="SplitLease Logo"
-            className="headerLogo"
-          />
-        </button>
-        <button className="profileButton" onClick={() => navigate("/profile")}>
-          User Profile
-        </button>
-      </header> */}
       <HeaderHome user={userName} />
 
-      <div className="householdListContainer">
-        <p className="fieldText">My Households</p>
+      <div className="sectionContainer">
+        <p className="sectionTitle">My Households</p>
         <input
           type="text"
-          className="textInput"
-          placeholder="search households"
+          className="textField"
+          placeholder="Search households"
         />
 
         <div className="householdList">
           {households.length === 0 ? (
-            <p className="fieldText">No households available.</p>
+            <p className="householdEmpty">No households available.</p>
           ) : (
             households.map((household, index) => (
               <button
                 key={household.id || index}
                 type="button"
-                className="householdItem"
+                className="listRow"
                 onClick={() => {
                   saveCurrentUser({
                     ...getCurrentUser(),
@@ -88,16 +72,16 @@ function UserHomePage() {
         </div>
       </div>
 
-      <div className="actionButtons">
+      <div className="sectionContainer homeActions">
         <button
-          className="createButton"
+          className="primaryButton"
           type="button"
           onClick={() => navigate("/create")}
         >
           Create Household
         </button>
         <button
-          className="createButton"
+          className="primaryButton"
           type="button"
           onClick={() => navigate("/join-household")}
         >
