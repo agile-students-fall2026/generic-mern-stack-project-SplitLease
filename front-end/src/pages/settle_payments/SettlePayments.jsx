@@ -43,6 +43,8 @@ const SettlePayments = () => {
 
       setMessage({ type: "success", text: result.message });
       setAmount("");
+      const updated = await getBalances(householdId);
+      setBalances(updated.balances);
     } catch {
       setMessage({ type: "error", text: "Could not reach the server. Please try again." });
     }

@@ -140,6 +140,8 @@ app.delete(
   },
 );
 
+const payments = []
+
 const getBalances = (householdId) => {
   const householdMembers = members.filter((m) =>
     m.household_ids.includes(householdId),
@@ -158,7 +160,11 @@ const getBalances = (householdId) => {
         owes -= expense.price;
       }
     });
-
+    payments .filter((p) => p.householdId === householdId)
+      .forEach((p) => {
+        if (p.fromMemberId === member.id) owes -= p.amount
+        if (p.toMemberId === member.id) owes += p.amount
+      })
     return {
       memberId: member.id,
       name: `${member.first_name} ${member.last_name}`,
@@ -217,6 +223,8 @@ app.post("/api/households/:householdId/settle", (req, res) => {
       .status(400)
       .json({ error: `${payer.name} only owes $${payer.owes.toFixed(2)}` });
   }
+  payments.push({ householdId, fromMemberId, toMemberId, amount })
+  
   res.status(201).json({
     status: "success",
     message: `${payer.name} paid ${payee.name} $${amount.toFixed(2)}`,
