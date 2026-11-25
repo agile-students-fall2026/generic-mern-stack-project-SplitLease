@@ -105,9 +105,13 @@ const HouseholdDashboard = () => {
           <div className="assetsList">
             <button
               className="viewAssetsButton"
-              onClick={() => navigate("/expenses")}
-            >
+              onClick={() => navigate("/expenses")}>
               View Expenses Page
+            </button>
+            <button
+              className="viewAssetsButton"
+              onClick={() => navigate("/settle")} >
+              Settle Payment
             </button>
             <p className="fieldText">
               {balance === null
