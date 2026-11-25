@@ -15,12 +15,14 @@ const householdService = require("./services/householdService");
 const roommateService = require("./services/roommateService");
 const recurringBillService = require("./services/recurringBillService");
 const expenseService = require("./services/expenseService");
+const { router: itemValueRouter } = require("./services/item_value");
 
 const app = express();
 
 app.use(express.json());
 app.use(purchaseAssetRouter);
 app.use(editAssetRouter);
+app.use(itemValueRouter);
 
 app.get("/api/households", (req, res) => {
   res.json(households);

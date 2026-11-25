@@ -86,6 +86,10 @@ const AssetList = () => {
                       ${Number(asset.price).toFixed(2)}
                       {asset.paidBy && ` - paid by ${asset.paidBy}`}
                     </p>
+                    <p className="asset-meta">
+                      Current value: $
+                      {Number(asset.current_value ?? asset.price).toFixed(2)}
+                    </p>
                     {asset.description && (
                       <p className="asset-description">{asset.description}</p>
                     )}

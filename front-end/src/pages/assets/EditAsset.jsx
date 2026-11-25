@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/Header";
+import { getCurrentUser } from "../login/authApi";
 import "./CreateAsset.css";
 import "./EditAsset.css";
 
@@ -19,6 +20,8 @@ const EditAsset = () => {
   const [formData, setFormData] = useState(null);
   const [image, setImage] = useState(null);
   const [errors, setErrors] = useState({});
+  const [value, setValue] = useState("");
+  const [originalValue, setOriginalValue] = useState("");
 
   useEffect(() => {
     axios
@@ -35,6 +38,15 @@ const EditAsset = () => {
         });
       })
       .catch(() => setErrors({ form: "Asset not found." }));
+
+    axios
+      .get(`/api/assets/${id}/value`)
+      .then((res) => {
+        setValue(String(res.data.currentValue));
+        setOriginalValue(String(res.data.currentValue));
+      })
+
+      .catch(() => {});
   }, [id]);
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,12 +59,23 @@ const EditAsset = () => {
 
     axios
       .put(`/api/assets/${id}`, data)
+      .then(() => {
+        if (value === originalValue) return; // value unchanged, skip
+        return axios.put(`/api/assets/${id}/value`, {
+          value,
+          memberId: getCurrentUser()?.id,
+        });
+      })
       .then(() => navigate("/assets"))
-      .catch((err) =>
+      .catch((err) => {
+        const body = err.response?.data;
         setErrors(
-          err.response?.data?.errors || { form: "Could not save the asset." },
-        ),
-      );
+          body?.errors ||
+            (body?.message
+              ? { value: body.message }
+              : { form: "Could not save the asset." }),
+        );
+      });
   };
 
   return (
@@ -78,6 +101,17 @@ const EditAsset = () => {
                 )}
               </div>
             ))}
+
+            <div className="form-group">
+              <label htmlFor="value">Current Value ($)</label>
+              <input
+                id="value"
+                name="value"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+              {errors.value && <p className="errorText">{errors.value}</p>}
+            </div>
 
             <div className="form-group">
               <label htmlFor="image">Picture (optional)</label>
