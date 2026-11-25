@@ -261,6 +261,32 @@ app.post(
   },
 )
 
+app.post(
+  "/api/households/:householdId/expenses",
+  async (req, res, next) => {
+    try {
+      const body = req.body || {}
+      const result = await expenseService.createHouseholdExpense(
+        req.params.householdId,
+        body,
+        body.payerId,
+      )
+
+      if (result.errors) {
+        return res.status(400).json({ errors: result.errors })
+      }
+
+      if (result.error) {
+        return res.status(result.status).json({ error: result.error })
+      }
+
+      return res.status(201).json({ expense: result.expense })
+    } catch (error) {
+      return next(error)
+    }
+  },
+)
+
 app.get(
   "/api/households/:householdId/expenses",
   async (req, res, next) => {
