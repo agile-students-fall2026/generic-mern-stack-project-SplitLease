@@ -14,7 +14,7 @@ const IndividualProtocol = (props) => {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    axios.get(import.meta.env.VITE_PROTOCOLS_API_URL).then((response) => {
+        axios.get("/api/protocols").then((response) => { 
       setProtocol(response.data[0]); // pick the first protocol
     });
   }, []);

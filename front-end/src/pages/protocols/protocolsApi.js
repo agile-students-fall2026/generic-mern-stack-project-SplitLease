@@ -6,7 +6,7 @@ import { getCurrentUser } from "../login/authApi";
 export const getHouseholdProtocols = async () => {
   const [membersRes, protocolsRes, households] = await Promise.all([
     axios.get("/api/members"),
-    axios.get(import.meta.env.VITE_PROTOCOLS_API_URL),
+    axios.get("/api/protocols"),
     // the households table is only used for the name, so the page still loads if it fails
     axios
       .get("/api/households")

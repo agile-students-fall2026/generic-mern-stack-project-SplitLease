@@ -12,6 +12,8 @@ const purchaseAssetRouter = require("./services/purchase_asset");
 const authService = require("./services/authService");
 const householdService = require("./services/householdService");
 const roommateService = require("./services/roommateService");
+const recurringBillService = require("./services/recurringBillService")
+const expenseService = require("./services/expenseService")
 
 const app = express();
 
@@ -223,6 +225,81 @@ app.get("/api/households/:householdId/members/:memberId/balance", (req, res) => 
 
   res.json(balance)
 })
+
+app.get(
+  "/api/households/:householdId/recurring-bills",
+  (req, res) => {
+    const result = recurringBillService.listRecurringBills(
+      req.params.householdId,
+    )
+
+    if (result.error) {
+      return res.status(result.status).json({ error: result.error })
+    }
+
+    return res.json(result)
+  },
+)
+
+app.post(
+  "/api/households/:householdId/recurring-bills",
+  (req, res) => {
+    const result = recurringBillService.createRecurringBill(
+      req.params.householdId,
+      req.body || {},
+    )
+
+    if (result.errors) {
+      return res.status(400).json({ errors: result.errors })
+    }
+
+    if (result.error) {
+      return res.status(result.status).json({ error: result.error })
+    }
+
+    return res.status(201).json({ bill: result.bill })
+  },
+)
+
+app.get(
+  "/api/households/:householdId/expenses",
+  async (req, res, next) => {
+    try {
+      const result = await expenseService.listHouseholdExpenses(
+        req.params.householdId,
+      )
+
+      if (result.error) {
+        return res.status(result.status).json({ error: result.error })
+      }
+
+      return res.json(result)
+    } catch (error) {
+      return next(error)
+    }
+  },
+)
+
+app.post(
+  "/api/households/:householdId/expenses/:expenseId/settlements",
+  async (req, res, next) => {
+    try {
+      const result = await expenseService.settleExpense(
+        req.params.householdId,
+        req.params.expenseId,
+        (req.body || {}).memberId,
+      )
+
+      if (result.error) {
+        return res.status(result.status).json({ error: result.error })
+      }
+
+      return res.json({ expense: result.expense })
+    } catch (error) {
+      return next(error)
+    }
+  },
+)
 
 app.use((error, req, res, next) => {
   console.error(error);

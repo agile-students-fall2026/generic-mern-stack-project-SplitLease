@@ -12,7 +12,7 @@ const AssetList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios("http://localhost:3000/api/assets")
+    axios("/api/assets")
       .then((response) => {
         console.log("API Response:", response.data);
         setAssets(response.data);
@@ -23,7 +23,7 @@ const AssetList = () => {
   }, []);
 
   const filteredAssets = assets.filter((asset) =>
-    asset.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+    asset.asset_name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -64,14 +64,14 @@ const AssetList = () => {
                 filteredAssets.map((asset) => (
                   <div key={asset.id} className="asset-card">
                     <div className="asset-square">
-                      <div className="asset-name">{asset.name}</div>
+                      <div className="asset-name">{asset.asset_name}</div>
                       <img
                         src={
                           "https://picsum.photos/id/" +
                           asset.id * 20 +
                           "/100/100"
                         }
-                        alt={asset.name}
+                        alt={asset.asset_name}
                         className="asset-image"
                       />
                       <div className="asset-description">
