@@ -18,6 +18,7 @@ import ExpenseList from "./pages/expense_list/ExpenseList";
 import JoinHousehold from "./pages/join_household/join_household";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SettlePayments from "./pages/settle_payments/SettlePayments";
+import RentSplit from "./pages/rent_split/RentSplit";
 //import { Link } from "react-router-dom"
 import "./App.css";
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/assets" element={<AssetList />} />
         <Route path="/assets/create" element={<CreateAsset />} />
         <Route path="/expenses" element={<ExpenseList />} />
+        <Route path="/rent-split" element={<RentSplit />} />
         <Route path="/monthly-activity" element={<MonthlyActivity />} />
         <Route path="/manage-members" element={<ManageMembersPage />} />
         <Route path="/household" element={<HouseholdDashboard />} />
