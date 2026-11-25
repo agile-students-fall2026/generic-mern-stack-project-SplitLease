@@ -1,0 +1,10 @@
+.sectionContainer .settleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionContainer .settleButton {
+  width: 100%;
+  margin-top: 16px;
+}

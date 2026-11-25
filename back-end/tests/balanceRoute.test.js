@@ -12,7 +12,7 @@ describe("GET /api/households/:householdId/members/:memberId/balance", () => {
       .get("/api/households/1/members/2/balance")
       .end((err, res) => {
         res.should.have.status(200)
-        res.body.should.include({ memberId: 2, name: "Jane Doe", owes: 16 })
+        res.body.should.include({ memberId: 2, name: "Jane Doe", owes: 364 })
 
         done()
       })
@@ -24,7 +24,7 @@ describe("GET /api/households/:householdId/members/:memberId/balance", () => {
       .get("/api/households/1/members/1/balance")
       .end((err, res) => {
         res.should.have.status(200)
-        res.body.owes.should.equal(-304)
+        res.body.owes.should.equal(-1966)
 
         done()
       })

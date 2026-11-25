@@ -5,11 +5,18 @@ export const getHouseholdExpenses = async (householdId) => {
   return data
 }
 
-export const createRecurringBill = async (householdId, form) => {
+export const createHouseholdExpense = async (
+  householdId,
+  form,
+  payerId,
+) => {
   try {
     const { data } = await axios.post(
-      `/api/households/${householdId}/recurring-bills`,
-      form,
+      `/api/households/${householdId}/expenses`,
+      {
+        ...form,
+        payerId,
+      },
     )
 
     return data

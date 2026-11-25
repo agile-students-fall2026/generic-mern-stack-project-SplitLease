@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./HouseholdDashboard.css";
 import axios from "axios";
 import Header from '../../components/Header';
+import { getCurrentUser } from "../login/authApi";
 
 const HouseholdDashboard = () => {
   const navigate = useNavigate();
@@ -20,6 +21,26 @@ const HouseholdDashboard = () => {
     };
 
     fetchMembers();
+  }, []);
+
+  const currentUser = getCurrentUser();
+  const [balance, setBalance] = useState(null);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!currentUser) return;
+
+      try {
+        const response = await axios.get(
+          `/api/households/${currentUser.householdId}/members/${currentUser.id}/balance`,
+        );
+        setBalance(response.data.owes);
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+      }
+    };
+
+    fetchBalance();
   }, []);
 
   return (
@@ -84,11 +105,21 @@ const HouseholdDashboard = () => {
           <div className="assetsList">
             <button
               className="viewAssetsButton"
-              onClick={() => navigate("/expenses")}
-            >
+              onClick={() => navigate("/expenses")}>
               View Expenses Page
             </button>
-            <p className="fieldText">Preview Expenses</p>
+            <button
+              className="viewAssetsButton"
+              onClick={() => navigate("/settle")} >
+              Settle Payment
+            </button>
+            <p className="fieldText">
+              {balance === null
+                ? "Log in to see your balance"
+                : balance > 0
+                  ? `You owe $${balance.toFixed(2)}`
+                  : `You are owed $${Math.abs(balance).toFixed(2)}`}
+            </p>
           </div>
         </div>
 
