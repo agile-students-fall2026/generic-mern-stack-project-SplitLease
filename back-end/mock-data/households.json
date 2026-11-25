@@ -1,1 +1,20 @@
-[{"id":1, "household_name":"Forster","address":"510 Ronald Regan Drive","invite_code":"QG5D36"},{"id":2,"household_name":"Tennessee","address":"3502 Bluejay Trail","invite_code":"2161A3"}]
+[
+  {
+    "id": 1,
+    "household_name": "Forster",
+    "address": "510 Ronald Regan Drive",
+    "invite_code": "QG5D36"
+  },
+  {
+    "id": 2,
+    "household_name": "Tennessee",
+    "address": "3502 Bluejay Trail",
+    "invite_code": "2161A3"
+  },
+  {
+    "id": 3,
+    "household_name": "Empty House",
+    "address": "1 Test St",
+    "invite_code": "EMPTY3"
+  }
+]

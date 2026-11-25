@@ -20,14 +20,15 @@ export const getHouseholdProtocols = async () => {
 
   const allMembers = membersRes.data;
   const memberCount = Math.max(
-    allMembers.filter((m) => m.household_id === householdId).length,
+    allMembers.filter((m) => m.household_ids.includes(householdId)).length,
     1,
   );
   const householdRecord = Array.isArray(households)
     ? households.find((h) => h.id === householdId)
     : null;
   const householdName =
-    (householdRecord && householdRecord.household_name) || `Household ${householdId}`;
+    (householdRecord && householdRecord.household_name) ||
+    `Household ${householdId}`;
 
   const nameOf = (id) => {
     const member = allMembers.find((m) => m.id === id);

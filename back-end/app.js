@@ -141,8 +141,8 @@ app.delete(
 );
 
 const getBalances = (householdId) => {
-  const householdMembers = members.filter(
-    (m) => m.household_id === householdId,
+  const householdMembers = members.filter((m) =>
+    m.household_ids.includes(householdId),
   );
   const householdExpenses = expenses.filter(
     (e) => e.household_id === householdId,

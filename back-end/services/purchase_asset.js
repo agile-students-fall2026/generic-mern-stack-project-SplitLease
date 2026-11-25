@@ -87,7 +87,7 @@ const loadMembers = async () => {
     last_name: m.last_name,
     email: m.email,
     routing_num: m.routing_num,
-    household_id: m.household_id,
+    household_ids: m.household_ids,
   }));
   return members;
 };
@@ -238,6 +238,25 @@ const getAssets = () => [...addedAssets, ...localAssets];
 
 router.get("/api/assets", (req, res) => {
   res.json(getAssets());
+});
+
+router.get("/api/households/:householdId/assets", async (req, res) => {
+  const householdId = Number(req.params.householdId);
+  const memberId = Number(req.query.memberId);
+
+  const allMembers = await getMembers();
+  const isMember = allMembers.some(
+    (m) => m.id === memberId && m.household_ids.includes(householdId),
+  );
+
+  if (!isMember) {
+    return res
+      .status(403)
+      .json({ error: "Only members of this household can view its items" });
+  }
+
+  const items = getAssets().filter((a) => a.household_id === householdId);
+  return res.json(items);
 });
 
 router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
