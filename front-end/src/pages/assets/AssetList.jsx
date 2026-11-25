@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import "./AssetList.css";
-import Header from '../../components/Header';
+import Header from "../../components/Header";
 
 const AssetList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,62 +28,72 @@ const AssetList = () => {
 
   return (
     <div className="asset-page-container">
-
       <Header page_title="Assets" backTo="/household" />
 
       <main className="mainContainer">
         {/* Outer box */}
 
-          <div className="action-container">
-            <div className="create-container">
-              <button
-                className="primaryButton"
-                onClick={() => navigate("/assets/create")}
-              >
-                Create Asset
-              </button>
-            </div>
-
-            {/* Search bar */}
-            <div className="search-container">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search assets"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+        <div className="action-container">
+          <div className="create-container">
+            <button
+              className="primaryButton"
+              onClick={() => navigate("/assets/create")}
+            >
+              Create Asset
+            </button>
           </div>
-          {/* Create asset button */}
 
-          {/* Inner box with grid */}
-          <div className="asset-inner-container">
-            <div className="asset-grid">
-              {filteredAssets.length > 0 ? (
-                filteredAssets.map((asset) => (
-                  <div key={asset.id} className="asset-card">
-                    <div className="asset-square">
-                      <div className="asset-name">{asset.asset_name}</div>
-                      <img
-                        src={
-                          "https://picsum.photos/id/" +
-                          asset.id * 20 +
-                          "/100/100"
-                        }
-                        alt={asset.asset_name}
-                        className="asset-image"
-                      />
-                      <div className="asset-description">
-                        {asset.description}
-                      </div>
-                    </div>
+          {/* Search bar */}
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search assets"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+        {/* Create asset button */}
+
+        {/* Inner box with grid */}
+        <div className="asset-inner-container">
+          <div className="asset-grid">
+            {filteredAssets.length > 0 ? (
+              filteredAssets.map((asset) => (
+                <div key={asset.id} className="asset-card">
+                  <button
+                    type="button"
+                    className="edit-asset-button"
+                    onClick={() => navigate(`/assets/${asset.id}/edit`)}
+                  >
+                    Edit
+                  </button>
+
+                  {asset.image && (
+                    <img
+                      src={asset.image}
+                      alt={asset.asset_name}
+                      className="asset-image"
+                    />
+                  )}
+
+                  <div className="asset-info">
+                    <h3 className="asset-name">{asset.asset_name}</h3>
+                    <p className="asset-meta">
+                      ${Number(asset.price).toFixed(2)}
+                      {asset.paidBy && ` - paid by ${asset.paidBy}`}
+                    </p>
+                    {asset.description && (
+                      <p className="asset-description">{asset.description}</p>
+                    )}
                   </div>
-                ))
-              ) : (
-                <p className="no-assets">No assets found.</p>
-              )}
-            </div>
+                </div>
+              ))
+            ) : (
+              <p className="no-assets">No assets found.</p>
+            )}
+          </div>
         </div>
       </main>
     </div>

@@ -19,7 +19,7 @@ router.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", origin);
   }
   res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Methods", "GET, POST");
+  res.header("Access-Control-Allow-Methods", "GET, POST", "PUT");
   if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
 });
@@ -189,6 +189,14 @@ const checkPaidBy = (value, memberList) => {
   return { names: matched };
 };
 
+const checkDescription = (value) => {
+  const description = String(value ?? "").trim();
+  if (description.length > 200) {
+    return "Description cannot exceed 200 characters.";
+  }
+  return null;
+};
+
 const validateAsset = async (req, res, next) => {
   const body = req.body || {};
   const errors = {};
@@ -201,6 +209,9 @@ const validateAsset = async (req, res, next) => {
 
   const dateError = checkDate(body.date);
   if (dateError) errors.date = dateError;
+
+  const descriptionError = checkDescription(body.description);
+  if (descriptionError) errors.description = descriptionError;
 
   try {
     const result = checkPaidBy(body.paidBy, await getMembers());
@@ -222,12 +233,13 @@ const validateAsset = async (req, res, next) => {
 };
 
 const addedAssets = [];
-
 const localAssets = require("../mock-data/assets.json");
+const getAssets = () => [...addedAssets, ...localAssets];
 
 router.get("/api/assets", (req, res) => {
-  res.json([...addedAssets, ...localAssets]);
+  res.json(getAssets());
 });
+
 router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
   const name = String(req.body.name).trim();
   const price = Number(req.body.price);
@@ -236,7 +248,7 @@ router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
   const newAsset = {
     id: 1000 + addedAssets.length + 1,
     asset_name: name,
-    description: `$${price.toFixed(2)} - paid by ${paidBy}`,
+    description: "",
     price: price,
     date: String(req.body.date).trim(),
     paidBy: paidBy,
@@ -249,4 +261,4 @@ router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
   res.status(201).json({ status: "success", asset: newAsset });
 });
 
-module.exports = router;
+module.exports = { router, getAssets, uploadImage, validateAsset };
