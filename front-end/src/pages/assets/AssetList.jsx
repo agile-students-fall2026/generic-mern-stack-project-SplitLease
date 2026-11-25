@@ -11,8 +11,9 @@ const AssetList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [assets, setAssets] = useState([]);
   const navigate = useNavigate();
+  const [openMenuId, setOpenMenuId] = useState(null);
 
-  useEffect(() => {
+  const loadAssets = () => {
     const user = getCurrentUser();
     if (!user?.householdId) return;
 
@@ -22,7 +23,24 @@ const AssetList = () => {
       })
       .then((response) => setAssets(response.data))
       .catch((err) => console.error("Error getting assets:", err));
+  };
+
+  useEffect(() => {
+    loadAssets();
   }, []);
+
+  const handleDelete = (asset) => {
+    setOpenMenuId(null);
+
+    axios
+      .delete(`/api/assets/${asset.id}`, {
+        data: { memberId: getCurrentUser()?.id },
+      })
+      .then(() => loadAssets())
+      .catch((err) =>
+        alert(err.response?.data?.message || "Could not delete the asset."),
+      );
+  };
 
   const filteredAssets = assets.filter((asset) =>
     asset.asset_name?.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -64,13 +82,36 @@ const AssetList = () => {
             {filteredAssets.length > 0 ? (
               filteredAssets.map((asset) => (
                 <div key={asset.id} className="asset-card">
-                  <button
-                    type="button"
-                    className="edit-asset-button"
-                    onClick={() => navigate(`/assets/${asset.id}/edit`)}
-                  >
-                    Edit
-                  </button>
+                  <div className="asset-menu">
+                    <button
+                      type="button"
+                      className="asset-menu-button"
+                      aria-label="Asset options"
+                      onClick={() =>
+                        setOpenMenuId(openMenuId === asset.id ? null : asset.id)
+                      }
+                    >
+                      Options
+                    </button>
+
+                    {openMenuId === asset.id && (
+                      <div className="asset-menu-dropdown">
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/assets/${asset.id}/edit`)}
+                        >
+                          Edit Asset
+                        </button>
+                        <button
+                          type="button"
+                          className="asset-menu-delete"
+                          onClick={() => handleDelete(asset)}
+                        >
+                          Delete Asset
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
                   {asset.image && (
                     <img

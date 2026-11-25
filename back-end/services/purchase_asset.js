@@ -236,6 +236,17 @@ const addedAssets = [];
 const localAssets = require("../mock-data/assets.json");
 const getAssets = () => [...addedAssets, ...localAssets];
 
+const removeAsset = (id) => {
+  for (const list of [addedAssets, localAssets]) {
+    const index = list.findIndex((a) => a.id === id);
+    if (index !== -1) {
+      list.splice(index, 1);
+      return true;
+    }
+  }
+  return false;
+};
+
 router.get("/api/assets", (req, res) => {
   res.json(getAssets());
 });
@@ -280,4 +291,4 @@ router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
   res.status(201).json({ status: "success", asset: newAsset });
 });
 
-module.exports = { router, getAssets, uploadImage, validateAsset };
+module.exports = { router, getAssets, removeAsset, uploadImage, validateAsset };
