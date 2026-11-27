@@ -1,0 +1,11 @@
+[
+  {"id": 1, "household_id": 1, "paid_by": 1, "date": "2026-11-01", "type": "bill", "name": "Rent", "amount": 2500.00},
+  {"id": 2, "household_id": 1, "paid_by": 2, "date": "2026-11-03", "type": "bill", "name": "Electric bill", "amount": 120.00},
+  {"id": 3, "household_id": 1, "paid_by": 3, "date": "2026-11-07", "type": "expense", "name": "Groceries", "amount": 85.50},
+  {"id": 4, "household_id": 1, "paid_by": 6, "date": "2026-11-12", "type": "purchase", "name": "Vacuum cleaner", "amount": 150.00},
+  {"id": 5, "household_id": 1, "paid_by": 8, "date": "2026-11-15", "type": "payment", "name": "Paid Demo back", "amount": 60.00},
+  {"id": 6, "household_id": 1, "paid_by": 2, "date": "2026-10-28", "type": "bill", "name": "Internet bill", "amount": 70.00},
+  {"id": 7, "household_id": 2, "paid_by": 4, "date": "2026-11-01", "type": "bill", "name": "Rent", "amount": 2200.00},
+  {"id": 8, "household_id": 2, "paid_by": 5, "date": "2026-11-05", "type": "expense", "name": "Cleaning supplies", "amount": 32.75},
+  {"id": 9, "household_id": 2, "paid_by": 7, "date": "2026-11-10", "type": "purchase", "name": "Shower curtain", "amount": 25.00}
+]

@@ -1,121 +1,213 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
-import "./ExpenseList.css";
-import axios from "axios";
+import React, { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png"
+import { getCurrentUser } from "../login/authApi"
+import {
+  createHouseholdExpense,
+  getHouseholdExpenses,
+  settleExpense,
+} from "./expenseApi"
+import "./ExpenseList.css"
+
+const EMPTY_FORM = {
+  name: "",
+  description: "",
+  amount: "",
+}
+import Header from '../../components/Header';
 
 const ExpenseList = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const currentUser = getCurrentUser()
+  const householdId = currentUser?.householdId
 
-  const [expenses, setExpenses] = useState([]);
-  const [selectedExpenseId, setSelectedExpenseId] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-  });
+  const [expenses, setExpenses] = useState([])
+  const [members, setMembers] = useState([])
+  const [selectedExpenseId, setSelectedExpenseId] = useState(null)
+  const [formData, setFormData] = useState(EMPTY_FORM)
+  const [formErrors, setFormErrors] = useState({})
+  const [pageError, setPageError] = useState("")
+  const [settlementError, setSettlementError] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [creating, setCreating] = useState(false)
+  const [settlingExpenseId, setSettlingExpenseId] = useState(null)
 
   const selectedExpense = expenses.find(
     (expense) => expense.id === selectedExpenseId,
-  );
+  )
+
+  const unpaidExpenses = expenses.filter(
+    (expense) => !expense.paidByMemberIds.includes(currentUser?.id),
+  )
+
+  const memberName = (memberId) => {
+    const member = members.find((currentMember) => currentMember.id === memberId)
+
+    return member
+      ? `${member.firstName} ${member.lastName}`
+      : "Unknown member"
+  }
 
   useEffect(() => {
+    if (!householdId) {
+      setLoading(false)
+      return
+    }
+
     const fetchExpenses = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_EXPENSES_API_URL);
-        setExpenses(response.data);
-      } catch (error) {
-        console.error("Error fetching expenses:", error);
+        const data = await getHouseholdExpenses(householdId)
+        setExpenses(data.expenses)
+        setMembers(data.members)
+      } catch {
+        setPageError("Could not load household expenses. Please try again.")
+      } finally {
+        setLoading(false)
       }
-    };
+    }
 
-    fetchExpenses();
-  }, []);
+    fetchExpenses()
+  }, [householdId])
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
 
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((currentForm) => ({
+      ...currentForm,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const trimmedName = formData.name.trim();
-    const trimmedDescription = formData.description.trim();
-    const trimmedPrice = formData.price.trim();
-
-    if (!trimmedName || !trimmedDescription || !trimmedPrice) {
-      alert("Please fill in all fields.");
-      return;
-    }
+    setCreating(true)
+    setFormErrors({})
+    setPageError("")
 
     try {
-      const response = await axios.post(import.meta.env.VITE_EXPENSES_API_URL, {
-        name: trimmedName,
-        description: trimmedDescription,
-        price: trimmedPrice,
-      });
+      const result = await createHouseholdExpense(
+        householdId,
+        formData,
+        currentUser.id,
+      )
 
-      setExpenses((prevExpenses) => [...prevExpenses, response.data]);
-      setSelectedExpenseId(response.data.id);
-      setFormData({
-        name: "",
-        description: "",
-        price: "",
-      });
-    } catch (error) {
-      console.error("Could not add the expense", error);
-      alert("There was an error saving the expense.");
+      if (result.errors) {
+        setFormErrors(result.errors)
+        return
+      }
+
+      if (result.error) {
+        setPageError(result.error)
+        return
+      }
+
+      setExpenses((currentExpenses) => [...currentExpenses, result.expense])
+      setSelectedExpenseId(result.expense.id)
+      setFormData(EMPTY_FORM)
+    } catch {
+      setPageError("Could not create the one-time expense. Please try again.")
+    } finally {
+      setCreating(false)
     }
-  };
+  }
+
+  const handleSettle = async (expenseId) => {
+    setSettlingExpenseId(expenseId)
+    setSettlementError("")
+
+    try {
+      const result = await settleExpense(
+        householdId,
+        expenseId,
+        currentUser.id,
+      )
+
+      if (result.error) {
+        setSettlementError(result.error)
+        return
+      }
+
+      setExpenses((currentExpenses) =>
+        currentExpenses.map((expense) =>
+          expense.id === result.expense.id ? result.expense : expense,
+        ),
+      )
+    } catch {
+      setSettlementError("Could not settle this expense. Please try again.")
+    } finally {
+      setSettlingExpenseId(null)
+    }
+  }
 
   return (
-    <div className="expense-list-container">
-      <header className="header">
-        <button
-          type="button"
-          className="logoButton"
-          onClick={() => navigate("/home")}
-        >
-          <img
-            src={SplitLeaseLogo}
-            alt="SplitLease Logo"
-            className="headerLogo"
-          />
-        </button>
+    <div className="mainContainer">
+      <Header page_title= "Household Expenses" backTo="/household"/>
+      {pageError && <p className="expense-error">{pageError}</p>}
 
-        <button className="backButton" onClick={() => navigate("/household")}>
-          Back
-        </button>
-      </header>
+      <div className="sectionContainer">
+        <h2 className="sectionTitle">Expenses</h2>
 
-      <h1>Household Expenses</h1>
-
-      <div className="expense-list">
-        <h1>My Expenses</h1>
-
-        {expenses.length === 0 ? (
+        {loading ? (
+          <p>Loading expenses...</p>
+        ) : expenses.length === 0 ? (
           <p>There are currently no expenses available.</p>
         ) : (
-          expenses.map((expense) => (
+          <div className="expenseRows">
+          {expenses.map((expense) => (
             <div key={expense.id} className="expense-item">
               <button
                 type="button"
+                className="listRow"
                 onClick={() => setSelectedExpenseId(expense.id)}
               >
-                {expense.expense_name}
+                {expense.name}
               </button>
             </div>
-          ))
+          ))}
+          </div>
         )}
       </div>
 
-      <div className="expense-details">
-        <h1>Expense Details</h1>
+      <div className="sectionContainer">
+        <h2 className="sectionTitle">Expenses to Be Settled</h2>
+
+        {settlementError && (
+          <p className="expense-error">{settlementError}</p>
+        )}
+
+        {loading ? (
+          <p>Loading expenses...</p>
+        ) : unpaidExpenses.length === 0 ? (
+          <p>You have no expenses to settle.</p>
+        ) : (
+          <div className="expenseRows">
+          {unpaidExpenses.map((expense) => (
+            <div key={expense.id} className="listRow expenseSettleRow">
+              <button
+                type="button"
+                className="expenseRowName"
+                onClick={() => setSelectedExpenseId(expense.id)}
+              >
+                {expense.name}
+              </button>
+
+              <button
+                type="button"
+                className="primaryButton expenseSettleButton"
+                disabled={settlingExpenseId === expense.id}
+                onClick={() => handleSettle(expense.id)}
+              >
+                {settlingExpenseId === expense.id ? "Settling..." : "Settle"}
+              </button>
+            </div>
+          ))}
+          </div>
+        )}
+      </div>
+
+      <div className="sectionContainer expenseDetails">
+        <h2 className="sectionTitle"></h2>
 
         {selectedExpense ? (
           <div>
@@ -123,35 +215,67 @@ const ExpenseList = () => {
               <strong>Name:</strong> {selectedExpense.name}
             </p>
             <p>
-              <strong>Description:</strong> {selectedExpense.description}
+              <strong>Description:</strong>{" "}
+              {selectedExpense.description || "No description provided."}
             </p>
             <p>
-              <strong>Price:</strong> ${selectedExpense.price}
+              <strong>Price:</strong> ${Number(selectedExpense.amount).toFixed(2)}
             </p>
+            <p>
+              <strong>Type:</strong>{" "}
+              {selectedExpense.kind === "recurring"
+                ? "Recurring Bill"
+                : "One-Time Expense"}
+            </p>
+
+            {selectedExpense.frequency && (
+              <p>
+                <strong>Frequency:</strong> {selectedExpense.frequency}
+              </p>
+            )}
+
+            <h2 className="expenseSubheading">Members Who Have Paid</h2>
+
+            {selectedExpense.paidByMemberIds.length === 0 ? (
+              <p>No members have settled this expense yet.</p>
+            ) : (
+              <ul className="paidMembersList">
+                {selectedExpense.paidByMemberIds.map((memberId) => (
+                  <li key={memberId}>{memberName(memberId)}</li>
+                ))}
+              </ul>
+            )}
           </div>
         ) : (
           <p>No expense has been selected.</p>
         )}
       </div>
 
-      <div className="log-new-expense">
-        <h1>Log New Expense</h1>
+      <div className="sectionContainer">
+        <h2 className="sectionTitle"></h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="expenseForm">
           <div>
-            <label>Expense Name</label>
+            <label htmlFor="expenseName" className="expenseLabel" >Expense Name</label>
             <input
+              className="textField"
+              id="expenseName"
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
               placeholder="Enter expense name"
             />
+            {formErrors.name && (
+              <p className="field-error">{formErrors.name}</p>
+            )}
           </div>
 
           <div>
-            <label>Description</label>
+            <label htmlFor="expenseDescription" className="expenseLabel">Description</label>
             <textarea
+              className="textField"
+              id="expenseDescription"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
@@ -160,23 +284,37 @@ const ExpenseList = () => {
           </div>
 
           <div>
-            <label>Price</label>
+            <label htmlFor="expenseAmount" className="expenseLabel">Price</label>
             <input
-              type="number"
-              name="price"
-              value={formData.price}
+              className="textField"
+              id="expenseAmount"
+              type="text"
+              name="amount"
+              value={formData.amount}
               onChange={handleInputChange}
               placeholder="Enter expense price"
             />
+            {formErrors.amount && (
+              <p className="field-error">{formErrors.amount}</p>
+            )}
           </div>
 
-          <button type="submit">Submit Expense</button>
+          <button type="submit" className="primaryButton" disabled={creating}>
+            {creating ? "Submitting..." : "Submit Expense"}
+          </button>
         </form>
       </div>
 
-      <div className="actionButtons">
+      <div className="sectionContainer expenseActions">
         <button
-          className="monthlyActivityButton"
+          className="primaryButton"
+          type="button"
+          onClick={() => navigate("/rent-split")}
+        >
+          Split Rent
+        </button>
+        <button
+          className="primaryButton"
           type="button"
           onClick={() => navigate("/monthly-activity")}
         >
@@ -184,7 +322,7 @@ const ExpenseList = () => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ExpenseList;
+export default ExpenseList

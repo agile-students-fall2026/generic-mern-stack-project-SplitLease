@@ -19,7 +19,7 @@ router.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", origin);
   }
   res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Methods", "GET, POST");
+  res.header("Access-Control-Allow-Methods", "GET, POST", "PUT");
   if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
 });
@@ -67,15 +67,27 @@ const uploadImage = (req, res, next) => {
 
 let members = null;
 
+// const loadMembers = async () => {
+//   const response = await axios.get(
+//     `${process.env.API_MEMBERS_URL}?key=${process.env.API_SECRET_KEY}`,
+//   );
+//   members = response.data.map((m) => ({
+//     id: m.id,
+//     first_name: m.first_name,
+//     last_name: m.last_name,
+//     household_id: m.household_id,
+//   }));
+//   return members;
+// };
+const localMembers = require("../mock-data/members.json");
 const loadMembers = async () => {
-  const response = await axios.get(
-    `${process.env.API_MEMBERS_URL}?key=${process.env.API_SECRET_KEY}`,
-  );
-  members = response.data.map((m) => ({
+  members = localMembers.map((m) => ({
     id: m.id,
     first_name: m.first_name,
     last_name: m.last_name,
-    household_id: m.household_id,
+    email: m.email,
+    routing_num: m.routing_num,
+    household_ids: m.household_ids,
   }));
   return members;
 };
@@ -177,6 +189,14 @@ const checkPaidBy = (value, memberList) => {
   return { names: matched };
 };
 
+const checkDescription = (value) => {
+  const description = String(value ?? "").trim();
+  if (description.length > 200) {
+    return "Description cannot exceed 200 characters.";
+  }
+  return null;
+};
+
 const validateAsset = async (req, res, next) => {
   const body = req.body || {};
   const errors = {};
@@ -189,6 +209,9 @@ const validateAsset = async (req, res, next) => {
 
   const dateError = checkDate(body.date);
   if (dateError) errors.date = dateError;
+
+  const descriptionError = checkDescription(body.description);
+  if (descriptionError) errors.description = descriptionError;
 
   try {
     const result = checkPaidBy(body.paidBy, await getMembers());
@@ -210,17 +233,41 @@ const validateAsset = async (req, res, next) => {
 };
 
 const addedAssets = [];
+const localAssets = require("../mock-data/assets.json");
+const getAssets = () => [...addedAssets, ...localAssets];
 
-router.get("/api/assets", async (req, res) => {
-  try {
-    const response = await axios.get(
-      `${process.env.API_ASSETS_URL}?key=${process.env.API_SECRET_KEY}`,
-    );
-    res.json([...addedAssets, ...response.data]);
-  } catch (err) {
-    console.error("Error getting mock assets:", err.message);
-    res.json(addedAssets);
+const removeAsset = (id) => {
+  for (const list of [addedAssets, localAssets]) {
+    const index = list.findIndex((a) => a.id === id);
+    if (index !== -1) {
+      list.splice(index, 1);
+      return true;
+    }
   }
+  return false;
+};
+
+router.get("/api/assets", (req, res) => {
+  res.json(getAssets());
+});
+
+router.get("/api/households/:householdId/assets", async (req, res) => {
+  const householdId = Number(req.params.householdId);
+  const memberId = Number(req.query.memberId);
+
+  const allMembers = await getMembers();
+  const isMember = allMembers.some(
+    (m) => m.id === memberId && m.household_ids.includes(householdId),
+  );
+
+  if (!isMember) {
+    return res
+      .status(403)
+      .json({ error: "Only members of this household can view its items" });
+  }
+
+  const items = getAssets().filter((a) => a.household_id === householdId);
+  return res.json(items);
 });
 
 router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
@@ -231,7 +278,7 @@ router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
   const newAsset = {
     id: 1000 + addedAssets.length + 1,
     asset_name: name,
-    description: `$${price.toFixed(2)} - paid by ${paidBy}`,
+    description: "",
     price: price,
     date: String(req.body.date).trim(),
     paidBy: paidBy,
@@ -244,4 +291,4 @@ router.post("/api/assets", uploadImage, validateAsset, (req, res) => {
   res.status(201).json({ status: "success", asset: newAsset });
 });
 
-module.exports = router;
+module.exports = { router, getAssets, removeAsset, uploadImage, validateAsset };

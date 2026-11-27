@@ -9,9 +9,10 @@ const Protocols = () => {
 
   const [protocols, setProtocols] = useState([]);
   const [approvedByMe, setApprovedByMe] = useState([]);
+  const [selectedProtocol, setSelectedProtocol] = useState(null);
 
   useEffect(() => {
-    axios("http://localhost:3000/protocols")
+    axios("/api/protocols")
     .then((response) => {
       console.log("API Response:", response.data);
       setProtocols(response.data);
@@ -26,7 +27,7 @@ const Protocols = () => {
 
   const handleApprove = (id) => {
     axios
-      .post(`http://localhost:3000/protocols/${id}/approve`)
+      .post(`/api/protocols/${id}/approve`)
       .then((response) => {
         console.log("Approved protocol:", response.data);
         setApprovedByMe([...approvedByMe, id]);
@@ -86,16 +87,14 @@ const Protocols = () => {
                 <div className="protocolsInfo">
                   <span className="protocolsName">{p.protocol_name}</span>
                   <span className="protocolsMeta">
-                    Proposed by {p.proposed_by} · {p.approvals}/{p.member_count}
-                    approved
+                    Proposed by {p.proposed_by} · {p.approvals}/{p.member_count} approved
                   </span>
                 </div>
                 <div className="protocolsActions">
                   <button
                     type="button"
                     className="protocolsSecondary"
-                    onClick={() => navigate("/individualprotocol", { state: {protcoolId: p.id } })}
-                    
+                    onClick={() => setSelectedProtocol(p)} 
                   >
                     View
                   </button>
@@ -133,7 +132,7 @@ const Protocols = () => {
                 <button
                   type="button"
                   className="protocolsSecondary"
-                  onClick={() => navigate ("/individual-protocol", { state: { protocolId: protocol.id } })}
+                  onClick={() => setSelectedProtocol(p)}
                 >
                   View
                 </button>
@@ -142,7 +141,24 @@ const Protocols = () => {
           ))}
         </ul>
         )}
+
       </section>
+        {selectedProtocol && (
+              <div className="protocolsModalOverlay" onClick={() => setSelectedProtocol(null)}>
+                <div className="protocolsModal" onClick={(e) => e.stopPropagation()}>
+                  <h2 className="protocolsSectionTitle">{selectedProtocol.protocol_name}</h2>
+                  <p
+                  className="protocolsDescription">{selectedProtocol.protocol_description}</p>
+                  <button
+                    type="button"
+                    className="protocolsPrimary"
+                    onClick={() => setSelectedProtocol(null)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
     </div>
   );
 };

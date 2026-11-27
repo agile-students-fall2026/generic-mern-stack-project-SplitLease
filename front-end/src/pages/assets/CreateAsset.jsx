@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import axios from "axios";
 import "./CreateAsset.css";
+import HeaderButtons from '../../components/Header';
 
 const API_URL = "http://localhost:3000";
 
@@ -76,7 +77,7 @@ const CreateAsset = () => {
 
   return (
     <div className="create-page-container">
-      <div className="asset-header">
+      {/* <div className="asset-header">
         <button
           type="button"
           className="logoButton"
@@ -91,7 +92,8 @@ const CreateAsset = () => {
         <button className="backButton" onClick={() => navigate("/household")}>
           Back
         </button>
-      </div>
+      </div> */}
+      <HeaderButtons backTo="/household"/>
 
       <main className="form-main-container">
         <form className="asset-form" onSubmit={handleSubmit}>

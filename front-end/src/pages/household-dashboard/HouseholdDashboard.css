@@ -111,6 +111,15 @@ body,
   margin-top: 12px;
 }
 
+.dashboardMembers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
 .membersItem {
   width: 100%;
   padding: 10px;

@@ -103,44 +103,6 @@
   resize: vertical;
 }
 
-/* ---------- Upload / link buttons ---------- */
-.resourceActions {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-}
-
-.resourceButton {
-  padding: 10px 20px;
-  background-color: #ffffff;
-  color: var(--slate);
-  border: 2px solid var(--slate);
-  cursor: pointer;
-}
-
-.resourceButton:hover {
-  background-color: var(--slate);
-  color: var(--periwinkle);
-}
-
-/* ---------- Attached resources ---------- */
-.resourcesCard {
-  background-color: var(--periwinkle);
-  min-height: 220px;
-}
-
-.resourcesTitle {
-  margin: 0 0 14px;
-  color: var(--slate);
-}
-
-.resourceRow {
-  height: 28px;
-  margin-bottom: 10px;
-  background-color: #ffffff;
-  border: 2px solid var(--slate);
-}
-
 /* ---------- Submit ---------- */
 .proposalSubmit {
   align-self: center;
