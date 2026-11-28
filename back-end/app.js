@@ -8,6 +8,7 @@ const expenses = require("./mock-data/expenses.json");
 const activity = require("./mock-data/activity.json");
 
 const { getHouseholdActivity } = require("./services/activityService");
+const protocolsRouter = require("./services/protocols")
 const { router: purchaseAssetRouter } = require("./services/purchase_asset");
 const editAssetRouter = require("./services/edit_asset");
 const authService = require("./services/authService");
@@ -50,6 +51,7 @@ app.post("/api/expenses", (req, res) => {
   });
 });
 
+app.use("/api/protocols", protocolsRouter);
 app.get("/api/households/:householdId/activity", async (req, res, next) => {
   const householdId = Number(req.params.householdId);
 

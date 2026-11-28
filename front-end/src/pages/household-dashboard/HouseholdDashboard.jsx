@@ -25,7 +25,24 @@ const HouseholdDashboard = () => {
 
   const currentUser = getCurrentUser();
   const [balance, setBalance] = useState(null);
+  const [protocols, setProtocols] = useState([]);
 
+    useEffect(() => {
+      const fetchProtocols = async () => {
+        try {
+          const response = await axios.get("/api/protocols");
+          setProtocols(response.data);
+        } catch (error) {
+          console.error("Error fetching protocols:", error);
+        }
+      };
+
+      fetchProtocols();
+    }, []);
+
+    const pendingCount = protocols.filter((p) => p.status === "pending").length;
+    const approvedCount = protocols.filter((p) => p.status === "approved").length;
+    
   useEffect(() => {
     const fetchBalance = async () => {
       if (!currentUser) return;
@@ -127,17 +144,19 @@ const HouseholdDashboard = () => {
 
         <div className="sectionContainer">
           <h1 className="sectionTitle">Protocols</h1>
-          <div className="assetsList">
-            <button
-              className="viewAssetsButton"
-              onClick={() => navigate("/protocols")}
-            >
+            <div className="assetsList">
+              <button
+                type="button"
+                className="primaryButton"
+                onClick={() => navigate("/protocols")}
+              >
               View Protocols Page
-            </button>
-            <p className="fieldText">Preview Protocols</p>
-          </div>
+              </button>
+              <p className="fieldText">
+                {pendingCount} pending · {approvedCount} approved
+              </p>
+            </div>
         </div>
-
     </div>
   );
 };
